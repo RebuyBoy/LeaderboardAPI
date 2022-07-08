@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="leaderboard.001.init-tables" author="RebuyBoy">
+        <createTable tableName="date" schemaName="leaderboard">
+            <column name="id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_date"/>
+            </column>
+            <column name="date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="stake" schemaName="leaderboard">
+            <column name="id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_stake"/>
+            </column>
+            <column name="stake" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="player_name" schemaName="leaderboard">
+            <column name="id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_player_name"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="country" schemaName="leaderboard">
+            <column name="id" type="varchar(10)">
+                <constraints primaryKey="true" primaryKeyName="pk_country"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="player" schemaName="leaderboard">
+            <column name="id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_player"/>
+            </column>
+            <column name="player_name_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stake_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_id" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prize" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+            <column name="point" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseColumnNames="player_name_id"
+                baseTableName="player"
+                constraintName="fk_player_player_name_id"
+                baseTableSchemaName="leaderboard"
+                referencedColumnNames="id"
+                referencedTableName="player_name"
+                referencedTableSchemaName="leaderboard"
+                validate="true"/>
+        <addForeignKeyConstraint
+                baseColumnNames="stake_id"
+                baseTableName="player"
+                constraintName="fk_player_stake_id"
+                baseTableSchemaName="leaderboard"
+                referencedColumnNames="id"
+                referencedTableName="stake"
+                referencedTableSchemaName="leaderboard"
+                validate="true"/>
+        <addForeignKeyConstraint
+                baseColumnNames="country_id"
+                baseTableName="player"
+                constraintName="fk_player_country_id"
+                baseTableSchemaName="leaderboard"
+                referencedColumnNames="id"
+                referencedTableName="country"
+                referencedTableSchemaName="leaderboard"
+                validate="true"/>
+        <addForeignKeyConstraint
+                baseColumnNames="date_id"
+                baseTableName="player"
+                constraintName="fk_player_date_id"
+                baseTableSchemaName="leaderboard"
+                referencedColumnNames="id"
+                referencedTableName="date"
+                referencedTableSchemaName="leaderboard"
+                validate="true"/>
+
+        <createSequence
+                sequenceName="player_sq"
+                schemaName="leaderboard"
+                incrementBy="1"
+                minValue="1"
+                startValue="1"
+                cycle="false"/>
+        <createSequence
+                sequenceName="player_name_sq"
+                schemaName="leaderboard"
+                incrementBy="1"
+                minValue="1"
+                startValue="1"
+                cycle="false"/>
+        <createSequence
+                sequenceName="date_sq"
+                schemaName="leaderboard"
+                incrementBy="1"
+                minValue="1"
+                startValue="1"
+                cycle="false"/>
+    </changeSet>
+<!--//TODO  player -> result  result remove country_id   player add country_id-->
+</databaseChangeLog>
+
+        <!--    DATE(DAY/M/YEAR)-->
+        <!--    id-->
+        <!--    Timestamp-->
+
+        <!--    STAKE-->
+        <!--    id-->
+        <!--    stake(decimal)-->
+
+        <!--    NICKNAME(String)-->
+        <!--    id 1-->
+        <!--    name "tzzd2020"-->
+
+        <!--    COUNTRY(String)-->
+        <!--    id cn-->
+        <!--    name china-->
+
+        <!--    PLAYER-->
+        <!--    id-->
+        <!--    stakeID-->
+        <!--    dateID-->
+        <!--    nicknameID: 1,-->
+        <!--    rank: 1,-->
+        <!--    countryId: 'CN',-->
+        <!--    point: '3083.00',-->
+        <!--    prize: 55-->
+        <!--    }-->

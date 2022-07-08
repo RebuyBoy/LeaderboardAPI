@@ -1,0 +1,40 @@
+
+[{"nickname": "tzzd2020",
+"rank": 1,
+"countryId": "CN",
+"point": "3083.00",
+"prize": {
+"currencyId": "GCD",
+"value": 55,
+"description": null,
+"updatedAt": null,
+"prizeItem": null
+},
+"prizePaid": {
+"currencyId": null,
+"value": 0,
+"description": null,
+"updatedAt": null,
+"prizeItem": null
+},
+"isCorrect": true} , {
+nickname: 'Fish2023',
+rank: 2,
+countryId: 'UA',
+point: '2372.00',
+prize: {
+currencyId: 'GCD',
+value: 30,
+description: null,
+updatedAt: null,
+prizeItem: null
+},
+prizePaid: {
+currencyId: null,
+value: 0,
+description: null,
+updatedAt: null,
+prizeItem: null
+},
+isCorrect: true
+}]
