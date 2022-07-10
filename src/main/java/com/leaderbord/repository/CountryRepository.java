@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CountryRepository extends JpaRepository<Country,Integer> {
+public interface CountryRepository extends JpaRepository<Country, Integer> {
 
-    Country getById(String code);
+    Country getByCode(String code);
 }

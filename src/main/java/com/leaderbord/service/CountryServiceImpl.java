@@ -14,6 +14,6 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country getByCode(String code) {
-        return countryRepository.getById(code);
+        return countryRepository.getByCode(code);
     }
 }

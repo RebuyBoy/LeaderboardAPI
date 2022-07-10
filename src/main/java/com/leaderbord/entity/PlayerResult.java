@@ -1,17 +1,20 @@
 package com.leaderbord.entity;
 
-
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
 @Data
 @RequiredArgsConstructor
-//@JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "Player")
+@Table(name = "player_result")
 public class PlayerResult {
 
     @Id
@@ -23,7 +26,7 @@ public class PlayerResult {
     private BigDecimal point;
 
     @ManyToOne
-    @JoinColumn(name = "player_name_ID")
+    @JoinColumn(name = "player_ID")
     private Player playerName;
 
     @ManyToOne
@@ -33,9 +36,4 @@ public class PlayerResult {
     @ManyToOne
     @JoinColumn(name = "date_ID")
     private DateLB date;
-
-    @ManyToOne
-    @JoinColumn(name = "country_ID")
-    private Country country;
-
 }
