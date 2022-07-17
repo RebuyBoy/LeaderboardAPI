@@ -1,4 +1,4 @@
-package com.leaderbord.service;
+package com.leaderbord.service.interfaces;
 
 import com.leaderbord.entity.Country;
 
