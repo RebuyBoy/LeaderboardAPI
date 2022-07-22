@@ -13,9 +13,9 @@ import java.util.Base64;
 
 public class AES {
 
-    public String decrypt(String secret, String data) {
+    public static String decrypt(String secret, String data) {
 
-        secret = this.convertStringToHex(secret);
+        secret = convertStringToHex(secret);
         String decryptedText = "";
 
         try {
@@ -23,7 +23,7 @@ public class AES {
             byte[] saltData = Arrays.copyOfRange(cipherData, 8, 16);
 
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            final byte[][] keyAndIV = this.generateKeyAndIV(saltData, secret.getBytes(StandardCharsets.UTF_8), md5);
+            final byte[][] keyAndIV = generateKeyAndIV(saltData, secret.getBytes(StandardCharsets.UTF_8), md5);
             SecretKeySpec key = new SecretKeySpec(keyAndIV[0], "AES");
             IvParameterSpec iv = new IvParameterSpec(keyAndIV[1]);
 
@@ -44,7 +44,7 @@ public class AES {
         return decryptedText;
     }
 
-    private byte[][] generateKeyAndIV(byte[] salt, byte[] password, MessageDigest md) {
+    private static byte[][] generateKeyAndIV(byte[] salt, byte[] password, MessageDigest md) {
 
         int digestLength = md.getDigestLength();
         int requiredLength = (32 + 16 + digestLength - 1) / digestLength * digestLength;
@@ -75,7 +75,7 @@ public class AES {
         }
     }
 
-    private String convertStringToHex(String str) {
+    private static String convertStringToHex(String str) {
         long i = Long.parseLong(str);
         return Long.toHexString(i);
     }
