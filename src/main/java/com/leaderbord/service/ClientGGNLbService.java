@@ -1,11 +1,14 @@
 package com.leaderbord.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leaderbord.converters.ResponseDtoConverter;
 import com.leaderbord.dto.GGPlayerDTO;
 import com.leaderbord.dto.response.GroupsResponseDTO;
 import com.leaderbord.dto.response.ResponseDto;
+import com.leaderbord.dto.response.SetsDTO;
+import com.leaderbord.dto.response.SubsetsDTO;
 import com.leaderbord.exceptions.NoResultException;
 import com.leaderbord.util.AES;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +17,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -25,9 +32,20 @@ public class ClientGGNLbService {
     private static final String GGN_GROUP_ID_REQUEST_BASE = "https://pml.good-game-network.com/lapi/leaderboard/groups/";
     private static final String SECRET_KEY = "milliseconds";
     private static final String GGN_SHORT_DECK_PROMO_URL = "https://play.pokerok900.com/promotions/promo-short-deck";
+    private static final String PromoUrlFormat = "https://pml.good-game-network.com/lapi/leaderboard/%s/?status=PENDING&status=OPTED_IN&status=COMPLETED&status=EXPIRED&limit=%s&hasSummary=true&hasSummaryPaidPrizes=true&hasSummaryPrizeItem=true";
     private RestTemplate restTemplate;
     private ResponseDtoConverter converter;
     private ObjectMapper objectMapper;
+    private Map<String, String> stakesUrlLimit = Map.of(
+            "$10.00", "10"
+            , "$5.00", "15"
+            , "$2.00", "20"
+            , "$1.00", "20"
+            , "$0.50", "35"
+            , "$0.25", "50"
+            , "$0.10", "60"
+            , "$0.05", "70"
+            , "$0.02", "120");
 
     public ClientGGNLbService(RestTemplate restTemplate, ResponseDtoConverter converter, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
@@ -70,27 +88,34 @@ public class ClientGGNLbService {
         throw new NoResultException("Group id not found");
     }
 
-//    public static void main(String[] args) {
-//        ClientGGNLbService clientGGNLbService = new ClientGGNLbService(new RestTemplate(), new ResponseDtoConverter(), new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false));
-//        groupsResponseDTO = clientGGNLbService.groupIdRequest(GGN_SHORT_DECK_PROMO_URL);
-//        System.out.println(groupsResponseDTO.getGroupId());
-//        System.out.println(Arrays.toString(groupsResponseDTO.getGameTypes()));
-//        groupsResponseDTO.getSets().stream().forEach(setsDTO -> {
-//            System.out.println(setsDTO.getDate());
-//            setsDTO.getSubsets().stream().forEach(e -> System.out.println(e));
-//        });
-//    }
+    private List<String> generatePromotionUrls(List<SetsDTO> sets) {
+        return sets.stream()
+                .filter(promotion -> isToday(promotion.getDate()))
+                .findFirst()
+                .orElseThrow(() -> new NoResultException("Date no found: " + sets))
+                .getSubsets().stream()
+                .map(this::generateUrl)
+                .collect(Collectors.toList());
+    }
 
-//    private List<String> generateListUrls(List<SetsDTO> promotionIds) {
-//        List<String> promoUrls = new ArrayList<>();
-//        promotionIds.stream().filter(promotion-> promotion.getDate())
-//    }
-//
-//    private String generateUrl(String promoId, String stake) {
-//        return String.format("https://pml.good-game-network.com/lapi/leaderboard/%s/?status=PENDING&status=OPTED_IN&status=COMPLETED&status=EXPIRED&limit=%s&hasSummary=true&hasSummaryPaidPrizes=true&hasSummaryPrizeItem=true", promoId, stake);
-//    }
-//
-//    private boolean compareDate(String date){
-//
-//    }
+    private String generateUrl(SubsetsDTO subsets) {
+        String formattedStake = formatStake(subsets.getStake());
+        return String.format(PromoUrlFormat, subsets.getPromotionId(), formattedStake);
+    }
+
+    //
+    private boolean isToday(String date) {
+        //TODO time zone UTC -8
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        return localDate.isEqual(now);
+    }
+
+    private String formatStake(String stake) {
+        if (stakesUrlLimit.containsKey(stake)) {
+            return stakesUrlLimit.get(stake);
+        }
+        throw new IllegalArgumentException("wrong stake: " + stake);
+    }
 }
