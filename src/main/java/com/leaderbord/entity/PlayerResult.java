@@ -27,7 +27,7 @@ public class PlayerResult {
 
     @ManyToOne
     @JoinColumn(name = "player_ID")
-    private Player playerName;
+    private Player player;
 
     @ManyToOne
     @JoinColumn(name = "stake_ID")
