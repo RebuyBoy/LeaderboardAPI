@@ -1,4 +1,4 @@
-package com.leaderbord.entity;
+package com.leaderboard.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -6,16 +6,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "player_result")
+@Table(name = "result")
 public class Result {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "result_generator")
+    @SequenceGenerator(name = "result_generator", sequenceName = "result_sq", schema = "leaderboard", allocationSize = 1)
     private int id;
     private int rank;
 
@@ -23,16 +25,18 @@ public class Result {
     private BigDecimal point;
 
     @ManyToOne
-    @JoinColumn(name = "player_ID")
+    @JoinColumn(name = "player_id")
     private Player player;
 
     @ManyToOne
-    @JoinColumn(name = "stake_ID")
+    @JoinColumn(name = "stake_id")
     private Stake stake;
 
     @ManyToOne
-    @JoinColumn(name = "date_ID")
+    @JoinColumn(name = "date_id")
     private DateLB date;
+
+    //TODO !!!!!!!!!!!!  add GameType
 
     public int getRank() {
         return rank;

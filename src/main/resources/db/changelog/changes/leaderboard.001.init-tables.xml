@@ -10,7 +10,7 @@
             <column name="id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_date"/>
             </column>
-            <column name="date" type="timestamp">
+            <column name="timestamp" type="timestamp">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -19,7 +19,7 @@
             <column name="id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_stake"/>
             </column>
-            <column name="stake" type="decimal">
+            <column name="stake_equivalent" type="decimal">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -45,9 +45,9 @@
             </column>
         </createTable>
 
-        <createTable tableName="player_result" schemaName="leaderboard">
+        <createTable tableName="result" schemaName="leaderboard">
             <column name="id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_player_result"/>
+                <constraints primaryKey="true" primaryKeyName="pk_result"/>
             </column>
             <column name="player_id" type="int">
                 <constraints nullable="false"/>
@@ -72,8 +72,8 @@
 
         <addForeignKeyConstraint
                 baseColumnNames="player_id"
-                baseTableName="player_result"
-                constraintName="fk_player_result_player_id"
+                baseTableName="result"
+                constraintName="fk_result_player_id"
                 baseTableSchemaName="leaderboard"
                 referencedColumnNames="id"
                 referencedTableName="player"
@@ -82,8 +82,8 @@
 
         <addForeignKeyConstraint
                 baseColumnNames="stake_id"
-                baseTableName="player_result"
-                constraintName="fk_player_result_stake_id"
+                baseTableName="result"
+                constraintName="fk_result_stake_id"
                 baseTableSchemaName="leaderboard"
                 referencedColumnNames="id"
                 referencedTableName="stake"
@@ -102,8 +102,8 @@
 
         <addForeignKeyConstraint
                 baseColumnNames="date_id"
-                baseTableName="player_result"
-                constraintName="fk_player_result_date_id"
+                baseTableName="result"
+                constraintName="fk_result_date_id"
                 baseTableSchemaName="leaderboard"
                 referencedColumnNames="id"
                 referencedTableName="date"
@@ -111,7 +111,15 @@
                 validate="true"/>
 
         <createSequence
-                sequenceName="player_result_sq"
+                sequenceName="result_sq"
+                schemaName="leaderboard"
+                incrementBy="1"
+                minValue="1"
+                startValue="1"
+                cycle="false"/>
+
+        <createSequence
+                sequenceName="date_sq"
                 schemaName="leaderboard"
                 incrementBy="1"
                 minValue="1"
@@ -127,7 +135,7 @@
                 cycle="false"/>
 
         <createSequence
-                sequenceName="date_sq"
+                sequenceName="stake_sq"
                 schemaName="leaderboard"
                 incrementBy="1"
                 minValue="1"

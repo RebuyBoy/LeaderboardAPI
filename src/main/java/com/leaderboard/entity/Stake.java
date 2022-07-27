@@ -1,4 +1,4 @@
-package com.leaderbord.entity;
+package com.leaderboard.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,10 +13,17 @@ import java.util.Objects;
 @Table(name = "stake")
 public class Stake {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "date")
-    @SequenceGenerator(name = "date_generator", sequenceName = "date_sq", schema = "leaderboard", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stake_generator")
+    @SequenceGenerator(name = "stake_generator", sequenceName = "stake_sq", schema = "leaderboard", allocationSize = 1)
     private int id;
     private BigDecimal stakeEquivalent;
+
+    public Stake() {
+    }
+
+    public Stake(BigDecimal stakeEquivalent) {
+        this.stakeEquivalent = stakeEquivalent;
+    }
 
     public BigDecimal getStakeEquivalent() {
         return stakeEquivalent;

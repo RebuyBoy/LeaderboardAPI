@@ -1,4 +1,4 @@
-package com.leaderbord.entity;
+package com.leaderboard.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +17,7 @@ public class Country {
 
     public Country() {
     }
+
 
     public Country(String code) {
         this.code = code;

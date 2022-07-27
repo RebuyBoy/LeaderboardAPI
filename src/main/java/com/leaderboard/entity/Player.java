@@ -1,4 +1,4 @@
-package com.leaderbord.entity;
+package com.leaderboard.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,8 +14,8 @@ import java.util.Objects;
 @Table(name = "player")
 public class Player {
     @Id
-    @SequenceGenerator(name = "player_name_generator", sequenceName = "player_name_sq", schema = "leaderboard", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_name_generator")
+    @SequenceGenerator(name = "player_generator", sequenceName = "player_sq", schema = "leaderboard", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_generator")
     private int id;
     private String name;
 
@@ -23,15 +23,26 @@ public class Player {
     @JoinColumn(name = "country_code")
     private Country country;
 
+    public Player() {
+    }
+
+    public Player(String name, Country country) {
+        this.name = name;
+        this.country = country;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-//TODO страны могут меняться, проверять и менять в базе и сравнивать только по имени игрока
     public Country getCountry() {
         return country;
     }
