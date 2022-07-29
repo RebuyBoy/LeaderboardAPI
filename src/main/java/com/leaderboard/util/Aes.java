@@ -1,5 +1,7 @@
 package com.leaderboard.util;
 
+import com.leaderboard.exceptions.AesException;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -15,7 +17,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class AES {
+public class Aes {
+
+    private Aes() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String decrypt(String secret, String data) {
 
@@ -43,7 +49,7 @@ public class AES {
                 | IllegalBlockSizeException
                 | BadPaddingException
                 | InvalidKeyException e) {
-            e.printStackTrace();
+            throw new AesException("Error during decrypt: " + e.getMessage());
         }
         return decryptedText;
     }
@@ -73,7 +79,7 @@ public class AES {
             result[1] = Arrays.copyOfRange(generatedData, 32, 32 + 16);
             return result;
         } catch (DigestException e) {
-            throw new RuntimeException(e);
+            throw new AesException("error generate key And IV: " + e.getMessage());
         } finally {
             Arrays.fill(generatedData, (byte) 0);
         }

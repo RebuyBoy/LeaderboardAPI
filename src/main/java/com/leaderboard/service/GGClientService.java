@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 import static com.leaderboard.constants.Constants.GGN_GROUP_ID_REQUEST_BASE;
 import static com.leaderboard.constants.Constants.GGN_SHORT_DECK_PROMO_URL;
-import static com.leaderboard.constants.Constants.PromoUrlFormat;
+import static com.leaderboard.constants.Constants.PROMO_URL_FORMAT;
 import static com.leaderboard.constants.Constants.stakesUrlLimit;
 
 @Service
@@ -61,11 +61,10 @@ public class GGClientService {
             List<GGResultDTO> resultDTOS = requestService.promotionIdRequest(url);
             resultDTOS.stream()
                     .map(resultDTO -> converter.dtoToResult(resultDTO, today, stake))
-                    .peek(System.out::println)
                     .forEach(resultService::save);
 
-            //convert GPlayerResultDTO -> PlayerResult entity
-            //save to DB
+            //TODO convert GPlayerResultDTO -> PlayerResult entity
+            //TODO save to DB
         }
     }
 
@@ -84,16 +83,8 @@ public class GGClientService {
         throw new NoResultException("Group id not found");
     }
 
-//    private List<String> generatePromotionUrls(List<SubsetsDTO> sets) {
-//        return sets
-//                .stream()
-//                .filter(subsetsDTO -> suitableStakes.contains(subsetsDTO.getStake()))
-//                .map(this::generateUrl)
-//                .collect(Collectors.toMap(s));
-//    }
-
     private String generateUrl(String stake, int promotionId) {
-        return String.format(PromoUrlFormat, promotionId, stake);
+        return String.format(PROMO_URL_FORMAT, promotionId, stake);
     }
 
     private LocalDate parseDate(String date) {

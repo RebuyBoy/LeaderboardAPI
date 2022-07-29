@@ -39,12 +39,12 @@ public class GGResultService implements ResultService {
 
     @Override
     public List<Result> getByDateFrom(LocalDate from) {
-        return null;
+        return List.of();
     }
 
     @Override
     public List<Result> getByDateBetween(LocalDate from, LocalDate to) {
-        return null;
+        return List.of();
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.leaderboard.dto.response.GroupsResponseDTO;
 import com.leaderboard.dto.response.ResponseDTO;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.RequestService;
-import com.leaderboard.util.AES;
+import com.leaderboard.util.Aes;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class GGRequestService implements RequestService {
         try {
             ResponseEntity<ResponseDTO> promotionIdResponse = restTemplate.exchange(url, HttpMethod.GET, null, ResponseDTO.class);
             String secret = promotionIdResponse.getHeaders().get(SECRET_KEY).get(0);
-            String decrypt = AES.decrypt(secret, promotionIdResponse.getBody().getData());
+            String decrypt = Aes.decrypt(secret, promotionIdResponse.getBody().getData());
             return mapper.readValue(decrypt, new TypeReference<>() {
             });
         } catch (JsonProcessingException e) {
@@ -55,7 +55,7 @@ public class GGRequestService implements RequestService {
         try {
             ResponseEntity<ResponseDTO> response = restTemplate.exchange(url, HttpMethod.GET, null, ResponseDTO.class);
             String secret = Objects.requireNonNull(response.getHeaders().get(SECRET_KEY)).get(0);
-            String decrypt = AES.decrypt(secret, Objects.requireNonNull(response.getBody()).getData());
+            String decrypt = Aes.decrypt(secret, Objects.requireNonNull(response.getBody()).getData());
             return mapper.readValue(decrypt, GroupsResponseDTO.class);
         } catch (JsonProcessingException | NullPointerException e) {
             e.printStackTrace();
