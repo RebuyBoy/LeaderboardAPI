@@ -13,15 +13,14 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Component
 //TODO -> Json converter
+@Component
 public class ResultDtoResultConverter {
 
     public Result dtoToResult(GGResultDTO resultDTO, LocalDate date, String stake) {
         BigDecimal prize = resultDTO.getPrize();
         BigDecimal points = resultDTO.getPoints();
         int rank = resultDTO.getRank();
-
 
         String countryCode = resultDTO.getCountryCode();
         Country country = new Country(countryCode);
@@ -31,17 +30,14 @@ public class ResultDtoResultConverter {
 
         Stake stake1 = new Stake(BigDecimal.valueOf(Double.parseDouble(stake.substring(1))));
         DateLB dateLB = new DateLB(Timestamp.valueOf(date.atTime(LocalTime.MIDNIGHT)));
-        //STAKE  stakeEquivalent
-        //DATE   timestamp
-        //TODO Result builder
-        Result result = new Result();
-        result.setPoint(points);
-        result.setPrize(prize);
-        result.setRank(rank);
-        result.setPlayer(player);
-        result.setStake(stake1);
-        result.setDate(dateLB);
-        return result;
+
+        return new Result.Builder().point(points)
+                .prize(prize)
+                .rank(rank)
+                .player(player)
+                .stake(stake1)
+                .date(dateLB)
+                .build();
     }
 
 }
