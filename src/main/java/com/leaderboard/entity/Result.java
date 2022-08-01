@@ -30,7 +30,10 @@ public class Result {
     @JoinColumn(name = "date_id")
     private DateLB date;
 
-    public Result(){}
+    private GameType gameType;
+
+    public Result() {
+    }
 
     private Result(Builder builder) {
         this.id = builder.id;
@@ -40,66 +43,71 @@ public class Result {
         this.player = builder.player;
         this.stake = builder.stake;
         this.date = builder.date;
+        this.gameType = builder.gameType;
     }
 
-
-
-    //TODO !!!!!!!!!!!!  add GameType
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-
     public int getRank() {
         return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
     }
 
     public BigDecimal getPrize() {
         return prize;
     }
 
-    public void setPrize(BigDecimal prize) {
-        this.prize = prize;
-    }
-
     public BigDecimal getPoint() {
         return point;
-    }
-
-    public void setPoint(BigDecimal point) {
-        this.point = point;
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     public Stake getStake() {
         return stake;
-    }
-
-    public void setStake(Stake stake) {
-        this.stake = stake;
     }
 
     public DateLB getDate() {
         return date;
     }
 
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public void setPrize(BigDecimal prize) {
+        this.prize = prize;
+    }
+
+    public void setPoint(BigDecimal point) {
+        this.point = point;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void setStake(Stake stake) {
+        this.stake = stake;
+    }
+
     public void setDate(DateLB date) {
         this.date = date;
+    }
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 
     @Override
@@ -141,9 +149,7 @@ public class Result {
         private Player player;
         private Stake stake;
         private DateLB date;
-
-        public Builder() {
-        }
+        private GameType gameType;
 
         public Builder id(int id) {
             this.id = id;
@@ -151,39 +157,44 @@ public class Result {
         }
 
         public Builder rank(int rank) {
-            this.rank=rank;
+            this.rank = rank;
             return this;
         }
 
         public Builder prize(BigDecimal prize) {
-            this.prize=prize;
+            this.prize = prize;
             return this;
         }
 
         public Builder point(BigDecimal point) {
-            this.point=point;
+            this.point = point;
             return this;
         }
 
         public Builder player(Player player) {
-            this.player=player;
+            this.player = player;
             return this;
         }
 
         public Builder stake(Stake stake) {
-            this.stake =stake;
+            this.stake = stake;
             return this;
         }
 
         public Builder date(DateLB date) {
-            this.date =date;
+            this.date = date;
+            return this;
+        }
+
+        public Builder gameType(GameType gameType) {
+            this.gameType = gameType;
             return this;
         }
 
         public Result build() {
+            //TODO validation??
             return new Result(this);
         }
-        //TODO validation??
 
     }
 

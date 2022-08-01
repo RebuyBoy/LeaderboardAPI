@@ -6,4 +6,5 @@
 
     <include file="changes/leaderboard.001.init-tables.xml" relativeToChangelogFile="true"/>
     <include file="changes/leaderboard.002.loadData-country.xml" relativeToChangelogFile="true"/>
+    <include file="changes/leaderboard.003.add-game-type.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
