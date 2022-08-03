@@ -5,8 +5,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="leaderboard.001.init-tables" author="Sergey M">
-
-        <createTable tableName="date" schemaName="leaderboard">
+        <createTable tableName="date">
             <column name="id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_date"/>
             </column>
@@ -15,7 +14,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="stake" schemaName="leaderboard">
+        <createTable tableName="stake">
             <column name="id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_stake"/>
             </column>
@@ -24,7 +23,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="player" schemaName="leaderboard">
+        <createTable tableName="player">
             <column name="id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_player"/>
             </column>
@@ -36,7 +35,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="country" schemaName="leaderboard">
+        <createTable tableName="country">
             <column name="code" type="varchar(5)">
                 <constraints primaryKey="true" primaryKeyName="pk_country"/>
             </column>
@@ -45,7 +44,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="result" schemaName="leaderboard">
+        <createTable tableName="result">
             <column name="id" type="int">
                 <constraints primaryKey="true" primaryKeyName="pk_result"/>
             </column>
@@ -74,45 +73,36 @@
                 baseColumnNames="player_id"
                 baseTableName="result"
                 constraintName="fk_result_player_id"
-                baseTableSchemaName="leaderboard"
                 referencedColumnNames="id"
                 referencedTableName="player"
-                referencedTableSchemaName="leaderboard"
                 validate="true"/>
 
         <addForeignKeyConstraint
                 baseColumnNames="stake_id"
                 baseTableName="result"
                 constraintName="fk_result_stake_id"
-                baseTableSchemaName="leaderboard"
                 referencedColumnNames="id"
                 referencedTableName="stake"
-                referencedTableSchemaName="leaderboard"
                 validate="true"/>
 
         <addForeignKeyConstraint
                 baseColumnNames="country_code"
                 baseTableName="player"
                 constraintName="fk_player_country_code"
-                baseTableSchemaName="leaderboard"
                 referencedColumnNames="code"
                 referencedTableName="country"
-                referencedTableSchemaName="leaderboard"
                 validate="true"/>
 
         <addForeignKeyConstraint
                 baseColumnNames="date_id"
                 baseTableName="result"
                 constraintName="fk_result_date_id"
-                baseTableSchemaName="leaderboard"
                 referencedColumnNames="id"
                 referencedTableName="date"
-                referencedTableSchemaName="leaderboard"
                 validate="true"/>
 
         <createSequence
                 sequenceName="result_sq"
-                schemaName="leaderboard"
                 incrementBy="1"
                 minValue="1"
                 startValue="1"
@@ -120,7 +110,6 @@
 
         <createSequence
                 sequenceName="date_sq"
-                schemaName="leaderboard"
                 incrementBy="1"
                 minValue="1"
                 startValue="1"
@@ -128,7 +117,6 @@
 
         <createSequence
                 sequenceName="player_sq"
-                schemaName="leaderboard"
                 incrementBy="1"
                 minValue="1"
                 startValue="1"
@@ -136,7 +124,6 @@
 
         <createSequence
                 sequenceName="stake_sq"
-                schemaName="leaderboard"
                 incrementBy="1"
                 minValue="1"
                 startValue="1"

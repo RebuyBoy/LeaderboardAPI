@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  leaderboardDB:
+    image: postgres:latest
+    container_name: leaderboardDB
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=LeaderboardDB
+    ports:
+      - "5433:5432"
