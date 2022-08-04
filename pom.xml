@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com</groupId>
-    <artifactId>leaderbord</artifactId>
+    <artifactId>leaderboard</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>leaderboard</name>
     <description>leaderboard</description>
