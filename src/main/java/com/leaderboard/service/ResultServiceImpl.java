@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class GGResultService implements ResultService {
+public class ResultServiceImpl implements ResultService {
 
     private final ResultRepository resultRepository;
     private final PlayerService playerService;
@@ -25,7 +25,7 @@ public class GGResultService implements ResultService {
     private final CountryService countryService;
     private final DateService dateService;
 
-    public GGResultService(PlayerService playerService
+    public ResultServiceImpl(PlayerService playerService
             , ResultRepository resultRepository
             , StakeService stakeService
             , CountryService countryService
@@ -74,5 +74,7 @@ public class GGResultService implements ResultService {
         //TODO check if exists result
         resultRepository.save(result);
     }
+
+
 
 }

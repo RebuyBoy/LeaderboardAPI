@@ -14,7 +14,7 @@ import java.util.Objects;
 @Table(name = "player")
 public class Player {
     @Id
-    @SequenceGenerator(name = "player_generator", sequenceName = "player_sq", schema = "leaderboard", allocationSize = 1)
+    @SequenceGenerator(name = "player_generator", sequenceName = "player_sq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_generator")
     private int id;
     private String name;

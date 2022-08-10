@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class DateLB {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "date_generator")
-    @SequenceGenerator(name = "date_generator", sequenceName = "date_sq", schema = "leaderboard", allocationSize = 1)
+    @SequenceGenerator(name = "date_generator", sequenceName = "date_sq", allocationSize = 1)
     private int id;
     private Timestamp timestamp;
 

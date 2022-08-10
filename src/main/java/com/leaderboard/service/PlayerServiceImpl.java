@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class GGPlayerService implements PlayerService {
+public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
 
-    public GGPlayerService(PlayerRepository playerRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 

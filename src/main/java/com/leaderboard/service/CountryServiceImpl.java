@@ -6,10 +6,10 @@ import com.leaderboard.service.interfaces.CountryService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GGCountryService implements CountryService {
+public class CountryServiceImpl implements CountryService {
     private final CountryRepository countryRepository;
 
-    public GGCountryService(CountryRepository countryRepository) {
+    public CountryServiceImpl(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
 

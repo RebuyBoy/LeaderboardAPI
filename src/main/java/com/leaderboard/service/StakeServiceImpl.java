@@ -9,10 +9,10 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
-public class GGStakeService implements StakeService {
+public class StakeServiceImpl implements StakeService {
     private final StakeRepository stakeRepository;
 
-    public GGStakeService(StakeRepository stakeRepository) {
+    public StakeServiceImpl(StakeRepository stakeRepository) {
         this.stakeRepository = stakeRepository;
     }
 

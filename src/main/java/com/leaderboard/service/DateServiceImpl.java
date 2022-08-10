@@ -9,10 +9,10 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
-public class GGDateService implements DateService {
+public class DateServiceImpl implements DateService {
     private final DateRepository dateRepository;
 
-    public GGDateService(DateRepository dateRepository) {
+    public DateServiceImpl(DateRepository dateRepository) {
         this.dateRepository = dateRepository;
     }
 

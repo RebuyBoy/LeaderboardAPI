@@ -15,7 +15,7 @@ public class Result {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "result_generator")
-    @SequenceGenerator(name = "result_generator", sequenceName = "result_sq", schema = "leaderboard", allocationSize = 1)
+    @SequenceGenerator(name = "result_generator", sequenceName = "result_sq", allocationSize = 1)
     private int id;
     private int rank;
     private BigDecimal prize;
