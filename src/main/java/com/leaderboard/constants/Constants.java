@@ -9,7 +9,7 @@ public class Constants {
     public static final String GGN_SHORT_DECK_PROMO_URL = "https://play.pokerok900.com/promotions/promo-short-deck";
     public static final String PROMO_URL_FORMAT = "https://pml.good-game-network.com/lapi/leaderboard/%s/?status=PENDING&status=OPTED_IN&status=COMPLETED&status=EXPIRED&limit=%s&hasSummary=true&hasSummaryPaidPrizes=true&hasSummaryPrizeItem=true";
     public static final String SECRET_KEY = "milliseconds";
-    public static final Set<String> suitableStakes = Set.of(
+    public static final Set<String> SUITABLE_STAKES = Set.of(
             "$10.00"
             , "$5.00"
             , "$2.00"
@@ -18,7 +18,7 @@ public class Constants {
             , "$0.25"
             , "$0.10"
     );
-    public static final Map<String, String> stakesUrlLimit = Map.of(
+    public static final Map<String, String> STAKES_TO_PART_OF_URL = Map.of(
             "$10.00", "10"
             , "$5.00", "15"
             , "$2.00", "20"

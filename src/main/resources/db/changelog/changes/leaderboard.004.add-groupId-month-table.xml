@@ -5,11 +5,14 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="leaderboard.004.add-groupId-month-table" author="Sergey M">
-        <createTable tableName="groupId">
-            <column name="month_year" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_month_year"/>
+        <createTable tableName="group_id">
+            <column name="id" type="int">
+                <constraints primaryKey="true" primaryKeyName="pk_group_id"/>
             </column>
-            <column name="group_id" type="int">
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="promotion_group_id" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
