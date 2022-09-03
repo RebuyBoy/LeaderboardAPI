@@ -1,5 +1,6 @@
 package com.leaderboard.service;
 
+import com.leaderboard.constants.Constants;
 import com.leaderboard.converters.ResultDtoResultConverter;
 import com.leaderboard.dto.GGResultDTO;
 import com.leaderboard.dto.response.GroupsResponseDTO;
@@ -42,31 +43,49 @@ public class GGClientService {
 
 
     public void getMonthlyData() {
-        String responseWithGroupId = requestService.mainPromoRequest(GGN_SHORT_DECK_PROMO_URL);
-        String groupId = findGroupIdFromResponse(responseWithGroupId);
-        String url = GGN_GROUP_ID_REQUEST_BASE + groupId;
-        this.groupsResponseDTO = requestService.groupIdRequest(url);
+        try {
+            String responseWithGroupId = requestService.mainPromoRequest(GGN_SHORT_DECK_PROMO_URL);
+            String groupId = findGroupIdFromResponse(responseWithGroupId);
+            //TODO delete
+            System.out.println(groupId);
+            String url = GGN_GROUP_ID_REQUEST_BASE + groupId;
+            this.groupsResponseDTO = requestService.groupIdRequest(url);
+        } catch (Exception e) {
+            //logger
+        }
     }
 
     public void getDailyData() {
-        if (groupsResponseDTO == null) {
-            getMonthlyData();
-        }
-        LocalDate today = ZonedDateTime.now(ZoneId.of("UTC-8")).toLocalDate();
-        SetsDTO sets = findSetByDate(groupsResponseDTO, today);
-        for (SubsetsDTO subset : sets.getSubsets()) {
-            String stake = subset.getStake();
-            int promotionId = subset.getPromotionId();
-            String url = generateUrl(formatStake(stake), promotionId);
-            List<GGResultDTO> resultDTOS = requestService.promotionIdRequest(url);
-            resultDTOS.stream()
-                    .map(resultDTO -> converter.dtoToResult(resultDTO, today, stake))
-                    .forEach(resultService::save);
-
-            //TODO convert GPlayerResultDTO -> PlayerResult entity
-            //TODO save to DB
+        try {
+            if (groupsResponseDTO == null) {
+                getMonthlyData();
+            }
+            LocalDate today = ZonedDateTime.now(ZoneId.of("UTC-8")).toLocalDate();
+            SetsDTO sets = findSetByDate(groupsResponseDTO, today);
+            for (SubsetsDTO subset : sets.getSubsets()) {
+                String stake = subset.getStake();
+                if (Constants.suitableStakes.contains(stake)) {
+                    int promotionId = subset.getPromotionId();
+                    String gameType = groupsResponseDTO.getGameTypes()[0];
+                    String url = generateUrl(formatStake(stake), promotionId);
+                    List<GGResultDTO> resultDTOS = requestService.promotionIdRequest(url);
+                    resultDTOS.stream()
+                            .map(resultDTO -> converter.dtoToResult(resultDTO, today, stake, gameType))
+                            .forEach(resultService::save);
+                }
+            }
+        } catch (Exception e) {
+            //log
         }
     }
+    public void getDailyData(LocalDate date){
+
+    }
+
+    public void getDailyData(List<LocalDate> dates){
+
+    }
+
 
     private SetsDTO findSetByDate(GroupsResponseDTO groupsResponse, LocalDate date) {
         return groupsResponse.getSets().stream()
