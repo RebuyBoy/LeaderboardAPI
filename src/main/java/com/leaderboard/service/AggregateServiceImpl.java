@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class AggregateServiceImpl implements AggregateService {
@@ -38,7 +39,15 @@ public class AggregateServiceImpl implements AggregateService {
 
     @Override
     public List<AggregatedResultDTO> getAllByDate(LocalDate start, LocalDate end) {
-        //TODO
+        //TODO logic with null or not end date
+        //TODO  DB date without time
+        if (Objects.isNull(start)) {
+            throw new IllegalArgumentException("start date cant be null");
+        }
+        if (Objects.isNull(end)) {
+//              return resultRepository.getResultsByDateAfter()
+        }
+//        return resultRepository.getResultsByDateBetween();
         return null;
     }
 
