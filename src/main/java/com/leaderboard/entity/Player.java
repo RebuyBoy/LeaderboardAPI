@@ -26,21 +26,22 @@ public class Player {
     public Player() {
     }
 
-    public Player(String name, Country country) {
-        this.name = name;
-        this.country = country;
+    private Player(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.country = builder.country;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Country getCountry() {
@@ -71,6 +72,31 @@ public class Player {
                 ", name='" + name + '\'' +
                 ", country=" + country +
                 '}';
+    }
+
+    public static final class Builder {
+        private int id;
+        private String name;
+        private Country country;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder country(Country country) {
+            this.country = country;
+            return this;
+        }
+
+        public Player build() {
+            return new Player(this);
+        }
     }
 }
 

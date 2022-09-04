@@ -3,16 +3,13 @@ package com.leaderboard.converters;
 import com.leaderboard.dto.GGResultDTO;
 import com.leaderboard.entity.Country;
 import com.leaderboard.entity.DateLB;
-import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
 import com.leaderboard.entity.Result;
 import com.leaderboard.entity.Stake;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Component
 public class ResultDtoResultConverter {
@@ -22,29 +19,28 @@ public class ResultDtoResultConverter {
         this.gameTypeConverter = gameTypeConverter;
     }
 
-    public Result dtoToResult(GGResultDTO resultDTO, LocalDate date, String stake, String gameTypeName) {
-        BigDecimal prize = resultDTO.getPrize();
-        BigDecimal points = resultDTO.getPoints();
-        int rank = resultDTO.getRank();
-
-        String countryCode = resultDTO.getCountryCode();
-        Country country = new Country(countryCode);
-
-        String name = resultDTO.getName();
-        Player player = new Player(name, country);
-
-        Stake stake1 = new Stake(BigDecimal.valueOf(Double.parseDouble(stake.substring(1))));
-        DateLB dateLB = new DateLB(Timestamp.valueOf(date.atTime(LocalTime.MIDNIGHT)));
-        GameType gameType = gameTypeConverter.convertToEntityAttributeByName(gameTypeName);
-
-        return new Result.Builder().point(points)
-                .prize(prize)
-                .rank(rank)
-                .player(player)
-                .stake(stake1)
-                .date(dateLB)
-                .gameType(gameType)
+    public Result dtoToResult(GGResultDTO resultDTO, LocalDate date, String stakeStr, String gameTypeName) {
+        return new Result.Builder()
+                .point(resultDTO.getPoints())
+                .prize(resultDTO.getPrize())
+                .rank(resultDTO.getRank())
+                .player(getPlayer(resultDTO))
+                .stake(stringToStake(stakeStr))
+                .date(new DateLB(date))
+                .gameType(gameTypeConverter.convertToEntityAttributeByName(gameTypeName))
                 .build();
     }
 
+    private Stake stringToStake(String stakeStr) {
+        String removedDollarSign = stakeStr.substring(1);
+        BigDecimal stake = BigDecimal.valueOf(Double.parseDouble(removedDollarSign));
+        return new Stake(stake);
+    }
+
+    private Player getPlayer(GGResultDTO resultDTO) {
+        return new Player.Builder()
+                .name(resultDTO.getName())
+                .country(new Country(resultDTO.getCountryCode()))
+                .build();
+    }
 }
