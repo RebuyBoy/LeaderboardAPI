@@ -5,7 +5,7 @@ import com.leaderboard.repository.DateRepository;
 import com.leaderboard.service.interfaces.DateService;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -18,15 +18,15 @@ public class DateServiceImpl implements DateService {
 
     @Override
     public DateLB createIfNotExist(DateLB dateLB) {
-        Optional<DateLB> date = getByDate(dateLB.getTimestamp());
+        Optional<DateLB> date = getByDate(dateLB.getDate());
         return date.isEmpty()
                 ? save(dateLB)
                 : date.get();
     }
 
     @Override
-    public Optional<DateLB> getByDate(Timestamp date) {
-        return dateRepository.getByTimestamp(date);
+    public Optional<DateLB> getByDate(LocalDate date) {
+        return dateRepository.getByDate(date);
 
     }
 

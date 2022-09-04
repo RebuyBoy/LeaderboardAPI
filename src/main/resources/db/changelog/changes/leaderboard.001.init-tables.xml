@@ -5,11 +5,11 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="leaderboard.001.init-tables" author="Sergey M">
-        <createTable tableName="date">
+        <createTable tableName="leaderboard_date">
             <column name="id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_date"/>
+                <constraints primaryKey="true" primaryKeyName="pk_leaderboard_date"/>
             </column>
-            <column name="timestamp" type="timestamp">
+            <column name="date" type="date">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -96,9 +96,9 @@
         <addForeignKeyConstraint
                 baseColumnNames="date_id"
                 baseTableName="result"
-                constraintName="fk_result_date_id"
+                constraintName="fk_result_pk_leaderboard_date_id"
                 referencedColumnNames="id"
-                referencedTableName="date"
+                referencedTableName="leaderboard_date"
                 validate="true"/>
 
         <createSequence
