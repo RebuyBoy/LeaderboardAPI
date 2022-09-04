@@ -17,6 +17,13 @@
             </column>
         </createTable>
 
+        <createSequence
+                sequenceName="group_id_sq"
+                incrementBy="1"
+                minValue="1"
+                startValue="1"
+                cycle="false"/>
+
     </changeSet>
 </databaseChangeLog>
 

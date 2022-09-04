@@ -4,13 +4,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 public class GroupId {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "group_id_generator", sequenceName = "group_id_sq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_id_generator")
     private int id;
     private LocalDate date;
     private String promotionGroupId;
@@ -40,7 +42,7 @@ public class GroupId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupId groupId1 = (GroupId) o;
-        return promotionGroupId == groupId1.promotionGroupId && date.equals(groupId1.date);
+        return promotionGroupId.equals(groupId1.promotionGroupId) && date.equals(groupId1.date);
     }
 
     @Override
