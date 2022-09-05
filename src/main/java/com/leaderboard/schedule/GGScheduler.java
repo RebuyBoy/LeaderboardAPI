@@ -6,24 +6,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GGScheduler {
+    private static final String EVERY_DAY_PLUS_3_MINUTE_AFTER_MIDNIGHT_CRON = "3 0 * * * ?";
+    private static final String GMT_8 = "GMT-8";
     private final GGClientService clientService;
 
     public GGScheduler(GGClientService clientService) {
         this.clientService = clientService;
     }
 
-//    @Scheduled(cron = "3 0 * * * ?", zone = "UTC-8")
-//    public void dailyPromotionData() {
-//        clientService.getMonthlyData();
-//    }
-
-//    @Scheduled(cron = "0 15 1 * ? *", zone = "UTC-8")
-//    public void monthlyGroupData() {
-//        clientService.getDailyData();
-//    }
-
-//    <minute> <hour> <day-of-month> <month> <day-of-week> <command>
-    //LOGGER parsed
-
+    @Scheduled(cron = EVERY_DAY_PLUS_3_MINUTE_AFTER_MIDNIGHT_CRON, zone = GMT_8)
+    public void dailyPromotionData() {
+        clientService.getMonthlyData();
+    }
 }
+
 
