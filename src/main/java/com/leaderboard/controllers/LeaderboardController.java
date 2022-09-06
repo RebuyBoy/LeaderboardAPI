@@ -37,11 +37,10 @@ public class LeaderboardController {
 
     @GetMapping("/results/dates")
     @ApiOperation("get results starting from date and ending with date if passed")
-    @ApiParam(example = "yyyy-MM-dd")
+    @ApiParam(example = "yyyy-MM-dd -> 2022-09-05")
     public List<AggregatedResultDTO> getAllByDate(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                                                   @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         //TODO  APi format
-        //OPTIONAL??
         return aggregateService.getAllByDate(start, end);
     }
 

@@ -39,16 +39,13 @@ public class AggregateServiceImpl implements AggregateService {
 
     @Override
     public List<AggregatedResultDTO> getAllByDate(LocalDate start, LocalDate end) {
-        //TODO logic with null or not end date
-        //TODO  DB date without time
         if (Objects.isNull(start)) {
             throw new IllegalArgumentException("start date cant be null");
         }
-        if (Objects.isNull(end)) {
-//              return resultRepository.getResultsByDateAfter()
+        if (end == null) {
+            end = LocalDate.now();
         }
-//        return resultRepository.getResultsByDateBetween();
-        return null;
+        return aggregate(resultRepository.getResultsByDateBetween(start, end));
     }
 
 
