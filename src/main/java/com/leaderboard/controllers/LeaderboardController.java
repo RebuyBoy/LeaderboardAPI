@@ -4,9 +4,9 @@ import com.leaderboard.dto.AggregatedResultDTO;
 import com.leaderboard.entity.Country;
 import com.leaderboard.service.interfaces.AggregateService;
 import com.leaderboard.service.interfaces.CountryService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("lb")
-@Api
+@Tag(name = "LeaderboardController")
 public class LeaderboardController {
     private final CountryService countryService;
     private final AggregateService aggregateService;
@@ -30,14 +30,14 @@ public class LeaderboardController {
     }
 
     @GetMapping("/results")
-    @ApiOperation("get all results")
+    @Operation(summary = "get all results")
     public List<AggregatedResultDTO> getAll() {
         return aggregateService.getAll();
     }
 
     @GetMapping("/results/dates")
-    @ApiOperation("get results starting from date and ending with date if passed")
-    @ApiParam(example = "yyyy-MM-dd -> 2022-09-05")
+    @Operation(summary = "get results starting from date and ending with date if passed")
+    @Parameter(example = "yyyy-MM-dd -> 2022-09-05")
     public List<AggregatedResultDTO> getAllByDate(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                                                   @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         //TODO  APi format
@@ -45,7 +45,7 @@ public class LeaderboardController {
     }
 
     @GetMapping("/country/{id}")
-    @ApiOperation("get country by its code")
+    @Operation(summary = "get country by its code")
     public String getCode(@PathVariable("id") String id) {
         Country byCode = countryService.getByCode(id);
         if (byCode == null) {
