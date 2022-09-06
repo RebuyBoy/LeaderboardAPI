@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     @Bean
-    public OpenAPI springShopOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info().title("SpringShop API")
+                .info(new Info().title("Leaderboard API")
                         .description("Leaderboard application")
                         .version("v0.0.1"));
     }
