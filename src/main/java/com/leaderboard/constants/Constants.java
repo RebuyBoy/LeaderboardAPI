@@ -9,6 +9,8 @@ public class Constants {
     public static final String GGN_SHORT_DECK_PROMO_URL = "https://play.pokerok900.com/promotions/promo-short-deck";
     public static final String PROMO_URL_FORMAT = "https://pml.good-game-network.com/lapi/leaderboard/%s/?status=PENDING&status=OPTED_IN&status=COMPLETED&status=EXPIRED&limit=%s&hasSummary=true&hasSummaryPaidPrizes=true&hasSummaryPrizeItem=true";
     public static final String SECRET_KEY = "milliseconds";
+    public static final String EVERY_DAY_PLUS_3_MINUTE_AFTER_MIDNIGHT_CRON = "3 0 * * * ?";
+    public static final String GMT_8 = "GMT-8";
     public static final Set<String> SUITABLE_STAKES = Set.of(
             "$10.00"
             , "$5.00"
