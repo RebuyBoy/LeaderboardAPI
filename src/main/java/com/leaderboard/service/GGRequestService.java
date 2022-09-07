@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leaderboard.dto.GGResultDTO;
-import com.leaderboard.dto.response.GroupsResponseDTO;
-import com.leaderboard.dto.response.ResponseDTO;
+import com.leaderboard.dto.response.GroupsResponse;
+import com.leaderboard.dto.response.Response;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.RequestService;
 import com.leaderboard.util.Aes;
@@ -32,7 +32,7 @@ public class GGRequestService implements RequestService {
     @Override
     public List<GGResultDTO> promotionIdRequest(String url) {
         try {
-            ResponseEntity<ResponseDTO> promotionIdResponse = restTemplate.exchange(url, HttpMethod.GET, null, ResponseDTO.class);
+            ResponseEntity<Response> promotionIdResponse = restTemplate.exchange(url, HttpMethod.GET, null, Response.class);
             String secret = promotionIdResponse.getHeaders().get(SECRET_KEY).get(0);
             String decrypt = Aes.decrypt(secret, promotionIdResponse.getBody().getData());
             return mapper.readValue(decrypt, new TypeReference<>() {
@@ -49,13 +49,13 @@ public class GGRequestService implements RequestService {
     }
 
     @Override
-    public GroupsResponseDTO groupIdRequest(String url) {
+    public GroupsResponse groupIdRequest(String url) {
         //TODO validations
         try {
-            ResponseEntity<ResponseDTO> response = restTemplate.exchange(url, HttpMethod.GET, null, ResponseDTO.class);
+            ResponseEntity<Response> response = restTemplate.exchange(url, HttpMethod.GET, null, Response.class);
             String secret = Objects.requireNonNull(response.getHeaders().get(SECRET_KEY)).get(0);
             String decrypt = Aes.decrypt(secret, Objects.requireNonNull(response.getBody()).getData());
-            return mapper.readValue(decrypt, GroupsResponseDTO.class);
+            return mapper.readValue(decrypt, GroupsResponse.class);
         } catch (JsonProcessingException | NullPointerException e) {
             e.printStackTrace();
         }

@@ -18,7 +18,6 @@ public class Country {
     public Country() {
     }
 
-
     public Country(String code) {
         this.code = code;
     }

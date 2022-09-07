@@ -2,9 +2,9 @@ package com.leaderboard.service;
 
 import com.leaderboard.converters.ResultDtoResultConverter;
 import com.leaderboard.dto.GGResultDTO;
-import com.leaderboard.dto.response.GroupsResponseDTO;
-import com.leaderboard.dto.response.SetsDTO;
-import com.leaderboard.dto.response.SubsetsDTO;
+import com.leaderboard.dto.response.GroupsResponse;
+import com.leaderboard.dto.response.SetsResponse;
+import com.leaderboard.dto.response.SubsetsResponse;
 import com.leaderboard.entity.GroupId;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.ClientService;
@@ -29,7 +29,7 @@ public class GGClientServiceImpl implements ClientService {
     private final ResultDtoResultConverter converter;
     private final ResultService resultService;
     private final GGGroupIdService groupIdService;
-    private GroupsResponseDTO groupsResponseDTO;
+    private GroupsResponse groupsResponseDTO;
 
 
     public GGClientServiceImpl(RequestService requestService
@@ -63,8 +63,8 @@ public class GGClientServiceImpl implements ClientService {
             updateMonthlyData();
         }
         try {
-            SetsDTO sets = findSetByDate(groupsResponseDTO, date);
-            for (SubsetsDTO subset : sets.getSubsets()) {
+            SetsResponse sets = findSetByDate(groupsResponseDTO, date);
+            for (SubsetsResponse subset : sets.getSubsets()) {
                 String stake = subset.getStake();
                 if (SUITABLE_STAKES.contains(stake))
                     handleData(date, subset, stake);
@@ -87,7 +87,7 @@ public class GGClientServiceImpl implements ClientService {
         }
     }
 
-    private void handleData(LocalDate date, SubsetsDTO subset, String stake) {
+    private void handleData(LocalDate date, SubsetsResponse subset, String stake) {
         List<GGResultDTO> resultDTOS = getGGResultDTOS(subset.getPromotionId(), stake);
         saveResultData(date, stake, resultDTOS);
     }
@@ -105,7 +105,7 @@ public class GGClientServiceImpl implements ClientService {
     }
 
 
-    private SetsDTO findSetByDate(GroupsResponseDTO groupsResponse, LocalDate date) {
+    private SetsResponse findSetByDate(GroupsResponse groupsResponse, LocalDate date) {
         return groupsResponse.getSets().stream()
                 .filter(sets -> parseDate(sets.getDate()).equals(date))
                 .findFirst()
