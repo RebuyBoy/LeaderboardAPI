@@ -10,16 +10,19 @@ import java.util.Objects;
 
 @Entity
 public class GroupId {
+
     @Id
     @SequenceGenerator(name = "group_id_generator", sequenceName = "group_id_sq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_id_generator")
     private int id;
     private LocalDate date;
+    private GameType gameType;
     private String promotionGroupId;
 
-    public GroupId(LocalDate date, String promotionGroupId) {
-        this.date = date;
-        this.promotionGroupId = promotionGroupId;
+    private GroupId(Builder builder) {
+        this.date = builder.date;
+        this.gameType = builder.gameType;
+        this.promotionGroupId = builder.promotionGroupId;
     }
 
     public GroupId() {
@@ -37,12 +40,16 @@ public class GroupId {
         return promotionGroupId;
     }
 
+    public GameType getGameType() {
+        return gameType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupId groupId1 = (GroupId) o;
-        return promotionGroupId.equals(groupId1.promotionGroupId) && date.equals(groupId1.date);
+        return promotionGroupId.equals(groupId1.promotionGroupId) && date.equals(groupId1.date) && gameType.equals(groupId1.gameType);
     }
 
     @Override
@@ -53,8 +60,36 @@ public class GroupId {
     @Override
     public String toString() {
         return "GroupId{" +
-                "date=" + date +
-                ", promotionGroupId=" + promotionGroupId +
+                "id=" + id +
+                ", date=" + date +
+                ", gameType=" + gameType +
+                ", promotionGroupId='" + promotionGroupId + '\'' +
                 '}';
     }
+
+    public static final class Builder {
+        private LocalDate date;
+        private GameType gameType;
+        private String promotionGroupId;
+
+        public Builder date(LocalDate date) {
+            this.date = date;
+            return this;
+        }
+
+        public Builder gameType(GameType gameType) {
+            this.gameType = gameType;
+            return this;
+        }
+
+        public Builder promotionGroupId(String promotionGroupId) {
+            this.promotionGroupId = promotionGroupId;
+            return this;
+        }
+
+        public GroupId build() {
+            return new GroupId(this);
+        }
+    }
+
 }
