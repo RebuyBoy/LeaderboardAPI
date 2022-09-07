@@ -2,10 +2,10 @@ package com.leaderboard.dto.response;
 
 import java.math.BigDecimal;
 
-public class StakeDTO {
+public class StakeResponse {
     private BigDecimal StakeEquivalent;
 
-    public StakeDTO(BigDecimal stakeEquivalent) {
+    public StakeResponse(BigDecimal stakeEquivalent) {
         StakeEquivalent = stakeEquivalent;
     }
 

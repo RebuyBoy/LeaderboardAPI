@@ -3,11 +3,11 @@ package com.leaderboard.dto.response;
 import java.util.Arrays;
 import java.util.List;
 
-public class GroupsResponseDTO  {
+public class GroupsResponse {
     int groupId;
     String name;
     String[] gameTypes;
-    List<SetsDTO> sets;
+    List<SetsResponse> sets;
 
     public int getGroupId() {
         return groupId;
@@ -33,11 +33,11 @@ public class GroupsResponseDTO  {
         this.gameTypes = gameTypes;
     }
 
-    public List<SetsDTO> getSets() {
+    public List<SetsResponse> getSets() {
         return sets;
     }
 
-    public void setSets(List<SetsDTO> sets) {
+    public void setSets(List<SetsResponse> sets) {
         this.sets = sets;
     }
 

@@ -2,7 +2,7 @@ package com.leaderboard.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SubsetsDTO {
+public class SubsetsResponse {
     private int promotionId;
     @JsonProperty("name")
     private String stake;

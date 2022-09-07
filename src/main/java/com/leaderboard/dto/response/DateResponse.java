@@ -2,10 +2,10 @@ package com.leaderboard.dto.response;
 
 import java.sql.Timestamp;
 
-public class DateDTO {
+public class DateResponse {
     private Timestamp timestamp;
 
-    public DateDTO(Timestamp timestamp) {
+    public DateResponse(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class SetsDTO {
+public class SetsResponse {
     @JsonProperty("name")
     private String date;
     //TODO  to localDate
-    private List<SubsetsDTO> subsets;
+    private List<SubsetsResponse> subsets;
 
     public String getDate() {
         return date;
@@ -18,11 +18,11 @@ public class SetsDTO {
         this.date = date;
     }
 
-    public List<SubsetsDTO> getSubsets() {
+    public List<SubsetsResponse> getSubsets() {
         return subsets;
     }
 
-    public void setSubsets(List<SubsetsDTO> subsets) {
+    public void setSubsets(List<SubsetsResponse> subsets) {
         this.subsets = subsets;
     }
 

@@ -1,7 +1,7 @@
 package com.leaderboard.dto.response;
 
 
-public class ResponseDTO {
+public class Response {
     private String data;
 
     public String getData() {
