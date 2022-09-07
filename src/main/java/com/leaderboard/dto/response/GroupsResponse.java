@@ -1,11 +1,15 @@
 package com.leaderboard.dto.response;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
 public class GroupsResponse {
+
     int groupId;
     String name;
+    //Можно подключить модуль Jackson time и поменять на LocalDate
+    Timestamp startedAt;
     String[] gameTypes;
     List<SetsResponse> sets;
 
@@ -41,13 +45,23 @@ public class GroupsResponse {
         this.sets = sets;
     }
 
+    public Timestamp getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(Timestamp startedAt) {
+        this.startedAt = startedAt;
+    }
+
     @Override
     public String toString() {
-        return "GroupsResponseDTO{" +
+        return "GroupsResponse{" +
                 "groupId=" + groupId +
                 ", name='" + name + '\'' +
+                ", startedAt=" + startedAt +
                 ", gameTypes=" + Arrays.toString(gameTypes) +
                 ", sets=" + sets +
                 '}';
     }
+
 }
