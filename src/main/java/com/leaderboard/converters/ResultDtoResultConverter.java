@@ -13,6 +13,7 @@ import java.time.LocalDate;
 
 @Component
 public class ResultDtoResultConverter {
+
     private final GameTypeConverter gameTypeConverter;
 
     public ResultDtoResultConverter(GameTypeConverter gameTypeConverter) {
