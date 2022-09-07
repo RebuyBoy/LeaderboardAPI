@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface GroupIdRepository extends JpaRepository<GroupId,Integer> {
-
     Optional<GroupId> getByDate(LocalDate date);
 }

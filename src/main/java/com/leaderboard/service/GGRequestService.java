@@ -44,9 +44,8 @@ public class GGRequestService implements RequestService {
     }
 
     @Override
-    public String mainPromoRequest(String url) {
-        ResponseEntity<String> mainResponse = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-        return mainResponse.getBody();
+    public String getHTMLBody(String url) {
+        return restTemplate.exchange(url, HttpMethod.GET, null, String.class).getBody();
     }
 
     @Override

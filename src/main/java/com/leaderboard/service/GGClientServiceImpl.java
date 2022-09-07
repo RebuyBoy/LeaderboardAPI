@@ -7,6 +7,7 @@ import com.leaderboard.dto.response.SetsDTO;
 import com.leaderboard.dto.response.SubsetsDTO;
 import com.leaderboard.entity.GroupId;
 import com.leaderboard.exceptions.NoResultException;
+import com.leaderboard.service.interfaces.ClientService;
 import com.leaderboard.service.interfaces.RequestService;
 import com.leaderboard.service.interfaces.ResultService;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.leaderboard.constants.Constants.GGN_GROUP_ID_REQUEST_BASE;
-import static com.leaderboard.constants.Constants.GGN_SHORT_DECK_PROMO_URL;
-import static com.leaderboard.constants.Constants.GMT_8;
-import static com.leaderboard.constants.Constants.PROMO_URL_FORMAT;
-import static com.leaderboard.constants.Constants.STAKES_TO_PART_OF_URL;
-import static com.leaderboard.constants.Constants.SUITABLE_STAKES;
+import static com.leaderboard.constants.Constants.*;
 
 @Service
-public class GGClientService {
+public class GGClientServiceImpl implements ClientService {
 
     private final RequestService requestService;
     private final ResultDtoResultConverter converter;
@@ -36,7 +32,7 @@ public class GGClientService {
     private GroupsResponseDTO groupsResponseDTO;
 
 
-    public GGClientService(RequestService requestService
+    public GGClientServiceImpl(RequestService requestService
             , ResultDtoResultConverter converter
             , ResultService resultService
             , GGGroupIdService groupIdService) {
@@ -47,44 +43,31 @@ public class GGClientService {
     }
 
 
-    public void getMonthlyData() {
-        try {
-            String responseWithGroupId = requestService.mainPromoRequest(GGN_SHORT_DECK_PROMO_URL);
-            String groupId = findGroupIdFromResponse(responseWithGroupId);
-
-            LocalDate currentMonthYear = LocalDate.now().withDayOfMonth(1);
-            groupIdService.saveIfNotExists(new GroupId(currentMonthYear, groupId));
-
-            String url = GGN_GROUP_ID_REQUEST_BASE + groupId;
-            this.groupsResponseDTO = requestService.groupIdRequest(url);
-        } catch (Exception e) {
-            //logger
-            System.out.println(e.getMessage());
+    @Override
+    public void runDailyDataFlow(List<LocalDate> dates) {
+        for (LocalDate date : dates) {
+            runDailyDataFlow(date);
         }
     }
 
-    public void getDailyData() {
+    @Override
+    public void runDailyDataFlow() {
         LocalDate today = ZonedDateTime.now(ZoneId.of(GMT_8)).toLocalDate();
-        getDailyData(today);
+        runDailyDataFlow(today);
     }
 
-    public void getDailyData(LocalDate date) {
+    @Override
+    public void runDailyDataFlow(LocalDate date) {
+        // TODO: 07.09.2022  compare month and update
         if (groupsResponseDTO == null) {
-            getMonthlyData();
+            updateMonthlyData();
         }
         try {
             SetsDTO sets = findSetByDate(groupsResponseDTO, date);
             for (SubsetsDTO subset : sets.getSubsets()) {
                 String stake = subset.getStake();
-                if (SUITABLE_STAKES.contains(stake)) {
-                    int promotionId = subset.getPromotionId();
-                    String gameType = groupsResponseDTO.getGameTypes()[0];
-                    String url = generateUrl(formatStake(stake), promotionId);
-                    List<GGResultDTO> resultDTOS = requestService.promotionIdRequest(url);
-                    resultDTOS.stream()
-                            .map(resultDTO -> converter.dtoToResult(resultDTO, date, stake, gameType))
-                            .forEach(resultService::save);
-                }
+                if (SUITABLE_STAKES.contains(stake))
+                    handleData(date, subset, stake);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -92,10 +75,33 @@ public class GGClientService {
         }
     }
 
-    public void getDailyData(List<LocalDate> dates) {
-        for (LocalDate date : dates) {
-            getDailyData(date);
+    private void updateMonthlyData() {
+        try {
+            String responseWithGroupId = requestService.getHTMLBody(GGN_SHORT_DECK_PROMO_URL);
+            String groupId = findGroupIdFromResponse(responseWithGroupId);
+            groupIdService.saveIfNotExists(new GroupId(getCurrentMonthYear(), groupId));
+            this.groupsResponseDTO = requestService.groupIdRequest(getGroupIdRequestUrl(groupId));
+        } catch (Exception e) {
+            //logger
+            System.out.println(e.getMessage());
         }
+    }
+
+    private void handleData(LocalDate date, SubsetsDTO subset, String stake) {
+        List<GGResultDTO> resultDTOS = getGGResultDTOS(subset.getPromotionId(), stake);
+        saveResultData(date, stake, resultDTOS);
+    }
+
+    private void saveResultData(LocalDate date, String stake, List<GGResultDTO> resultDTOS) {
+        String gameType = groupsResponseDTO.getGameTypes()[0];
+        resultDTOS.stream()
+                .map(resultDTO -> converter.dtoToResult(resultDTO, date, stake, gameType))
+                .forEach(resultService::save);
+    }
+
+    private List<GGResultDTO> getGGResultDTOS(int promotionId, String stake) {
+        String url = generateUrl(formatStake(stake), promotionId);
+        return requestService.promotionIdRequest(url);
     }
 
 
@@ -129,4 +135,14 @@ public class GGClientService {
         }
         throw new IllegalArgumentException("wrong stake: " + stake);
     }
+
+    // TODO: 07.09.2022 into UTIL
+    private LocalDate getCurrentMonthYear() {
+        return LocalDate.now().withDayOfMonth(1);
+    }
+
+    private String getGroupIdRequestUrl(String groupId) {
+        return String.format("%s%s", GGN_GROUP_ID_REQUEST_BASE, groupId);
+    }
+
 }

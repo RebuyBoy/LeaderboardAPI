@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface StakeRepository extends JpaRepository<Stake,Integer> {
         Optional<Stake> getByStakeEquivalent(BigDecimal stakeEquivalent);
-
 }

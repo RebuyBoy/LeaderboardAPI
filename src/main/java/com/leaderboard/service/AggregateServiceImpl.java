@@ -39,9 +39,6 @@ public class AggregateServiceImpl implements AggregateService {
 
     @Override
     public List<AggregatedResultDTO> getAllByDate(LocalDate start, LocalDate end) {
-        if (Objects.isNull(start)) {
-            throw new IllegalArgumentException("start date cant be null");
-        }
         if (end == null) {
             end = LocalDate.now();
         }

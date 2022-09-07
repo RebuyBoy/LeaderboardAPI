@@ -6,7 +6,8 @@ import com.leaderboard.dto.response.GroupsResponseDTO;
 import java.util.List;
 
 public interface RequestService {
-    String mainPromoRequest(String url);
+    String getHTMLBody(String url);
     List<GGResultDTO> promotionIdRequest(String url);
     GroupsResponseDTO groupIdRequest(String promoUrl);
+
 }

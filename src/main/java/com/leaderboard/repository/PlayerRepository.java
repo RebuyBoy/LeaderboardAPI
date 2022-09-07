@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
-
     Optional<Player> getByName(String name);
  }
