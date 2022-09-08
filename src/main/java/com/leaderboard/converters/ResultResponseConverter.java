@@ -12,15 +12,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Component
-public class ResultDtoResultConverter {
+public class ResultResponseConverter {
 
     private final GameTypeConverter gameTypeConverter;
 
-    public ResultDtoResultConverter(GameTypeConverter gameTypeConverter) {
+    public ResultResponseConverter(GameTypeConverter gameTypeConverter) {
         this.gameTypeConverter = gameTypeConverter;
     }
 
-    public Result dtoToResult(GGResultDTO resultDTO, LocalDate date, String stakeStr, String gameTypeName) {
+    public Result convert(GGResultDTO resultDTO, LocalDate date, String stakeStr, String gameTypeName) {
         return new Result.Builder()
                 .point(resultDTO.getPoints())
                 .prize(resultDTO.getPrize())
@@ -44,4 +44,5 @@ public class ResultDtoResultConverter {
                 .country(new Country(resultDTO.getCountryCode()))
                 .build();
     }
+
 }

@@ -1,6 +1,7 @@
 package com.leaderboard.service;
 
-import com.leaderboard.converters.ResultDtoResultConverter;
+import com.leaderboard.converters.GameTypeConverter;
+import com.leaderboard.converters.ResultResponseConverter;
 import com.leaderboard.dto.GGResultDTO;
 import com.leaderboard.dto.response.GroupsResponse;
 import com.leaderboard.dto.response.SetsResponse;
@@ -13,35 +14,43 @@ import com.leaderboard.service.interfaces.ResultService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.leaderboard.constants.Constants.*;
+import static com.leaderboard.constants.Constants.GGN_GROUP_ID_REQUEST_BASE;
+import static com.leaderboard.constants.Constants.GGN_SHORT_DECK_PROMO_URL;
+import static com.leaderboard.constants.Constants.GMT_8;
+import static com.leaderboard.constants.Constants.PROMO_URL_FORMAT;
+import static com.leaderboard.constants.Constants.STAKES_TO_PART_OF_URL;
+import static com.leaderboard.constants.Constants.SUITABLE_STAKES;
 
 @Service
 public class GGClientServiceImpl implements ClientService {
 
     private final RequestService requestService;
-    private final ResultDtoResultConverter converter;
+    private final ResultResponseConverter resultConverter;
     private final ResultService resultService;
     private final GGGroupIdService groupIdService;
-    private GroupsResponse groupsResponseDTO;
-
+    private final GameTypeConverter gameTypeConverter;
+    private GroupsResponse groupsResponse;
 
     public GGClientServiceImpl(RequestService requestService
-            , ResultDtoResultConverter converter
+            , ResultResponseConverter converter
             , ResultService resultService
-            , GGGroupIdService groupIdService) {
+            , GGGroupIdService groupIdService
+            , GameTypeConverter gameTypeConverter) {
         this.requestService = requestService;
-        this.converter = converter;
+        this.resultConverter = converter;
         this.resultService = resultService;
         this.groupIdService = groupIdService;
+        this.gameTypeConverter = gameTypeConverter;
     }
-
 
     @Override
     public void runDailyDataFlow(List<LocalDate> dates) {
@@ -52,50 +61,67 @@ public class GGClientServiceImpl implements ClientService {
 
     @Override
     public void runDailyDataFlow() {
-        LocalDate today = ZonedDateTime.now(ZoneId.of(GMT_8)).toLocalDate();
-        runDailyDataFlow(today);
+        runDailyDataFlow(getTargetDay());
+    }
+
+    private LocalDate getTargetDay() {
+        return ZonedDateTime
+                .now(ZoneId.of(GMT_8))
+                .minusDays(1)
+                .toLocalDate();
     }
 
     @Override
     public void runDailyDataFlow(LocalDate date) {
-        // TODO: 07.09.2022  compare month and update
-        if (groupsResponseDTO == null) {
+        if (Objects.isNull(groupsResponse) || isOutdatedMonth(groupsResponse, date)) {
             updateMonthlyData();
         }
         try {
-            SetsResponse sets = findSetByDate(groupsResponseDTO, date);
+            SetsResponse sets = findSetByDate(groupsResponse, date);
             for (SubsetsResponse subset : sets.getSubsets()) {
                 String stake = subset.getStake();
-                if (SUITABLE_STAKES.contains(stake))
+                if (SUITABLE_STAKES.contains(stake)) {
                     handleData(date, subset, stake);
+                }
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             //logger
+            e.printStackTrace();
         }
+    }
+
+    private boolean isOutdatedMonth(GroupsResponse groupsResponse, LocalDate date) {
+        Month month = groupsResponse.getStartedAt().toLocalDateTime().getMonth();
+        return !month.equals(date.getMonth());
     }
 
     private void updateMonthlyData() {
         try {
             String responseWithGroupId = requestService.getHTMLBody(GGN_SHORT_DECK_PROMO_URL);
-            String groupId = findGroupIdFromResponse(responseWithGroupId);
-            groupIdService.saveIfNotExists(new GroupId(getCurrentMonthYear(), groupId));
-            this.groupsResponseDTO = requestService.groupIdRequest(getGroupIdRequestUrl(groupId));
+            String groupIdStr = findGroupIdFromResponse(responseWithGroupId);
+            this.groupsResponse = requestService.groupIdRequest(getGroupIdRequestUrl(groupIdStr));
+            GroupId groupId = new GroupId.Builder()
+                    .promotionGroupId(groupIdStr)
+                    .date(getCurrentMonthYear())
+                    .gameType(gameTypeConverter.convertToEntityAttributeByName(groupsResponse.getGameTypes()[0]))
+                    .build();
+            groupIdService.saveIfNotExists(groupId);
         } catch (Exception e) {
             //logger
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void handleData(LocalDate date, SubsetsResponse subset, String stake) {
         List<GGResultDTO> resultDTOS = getGGResultDTOS(subset.getPromotionId(), stake);
-        saveResultData(date, stake, resultDTOS);
+        saveResults(date, stake, resultDTOS);
     }
 
-    private void saveResultData(LocalDate date, String stake, List<GGResultDTO> resultDTOS) {
-        String gameType = groupsResponseDTO.getGameTypes()[0];
+    private void saveResults(LocalDate date, String stake, List<GGResultDTO> resultDTOS) {
+        String gameType = groupsResponse.getGameTypes()[0];
         resultDTOS.stream()
-                .map(resultDTO -> converter.dtoToResult(resultDTO, date, stake, gameType))
+                .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType))
+                .peek(System.out::println)
                 .forEach(resultService::save);
     }
 
@@ -136,7 +162,6 @@ public class GGClientServiceImpl implements ClientService {
         throw new IllegalArgumentException("wrong stake: " + stake);
     }
 
-    // TODO: 07.09.2022 into UTIL
     private LocalDate getCurrentMonthYear() {
         return LocalDate.now().withDayOfMonth(1);
     }

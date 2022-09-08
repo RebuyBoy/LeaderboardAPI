@@ -31,4 +31,12 @@ public class DateLB {
     public void setTimestamp(LocalDate date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "DateLB{" +
+                "id=" + id +
+                ", date=" + date +
+                '}';
+    }
 }

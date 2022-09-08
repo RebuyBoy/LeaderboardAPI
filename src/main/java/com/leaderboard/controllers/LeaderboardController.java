@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class LeaderboardController extends BaseController {
     @GetMapping("/date")
     @Operation(summary = "get results starting from date and ending with date if passed")
     @Parameter(example = "yyyy-MM-dd -> 2022-09-05")
-    public List<AggregatedResultDTO> getAllByDate(@NotNull @RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
+    public List<AggregatedResultDTO> getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                                                   @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         return aggregateService.getAllByDate(start, end);
     }
