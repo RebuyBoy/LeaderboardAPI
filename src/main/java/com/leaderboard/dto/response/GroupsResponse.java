@@ -8,7 +8,7 @@ public class GroupsResponse {
 
     int groupId;
     String name;
-    //Можно подключить модуль Jackson time и поменять на LocalDate
+    //Mojno podkluchit'  Jackson time module and change to LocalDate
     Timestamp startedAt;
     String[] gameTypes;
     List<SetsResponse> sets;

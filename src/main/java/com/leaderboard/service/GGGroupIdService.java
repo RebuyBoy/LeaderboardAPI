@@ -17,14 +17,17 @@ public class GGGroupIdService implements GroupIdService {
 
     @Override
     public GroupId saveIfNotExists(GroupId groupId) {
-        Optional<GroupId> optionalGroupId = getByGroupId(groupId);
-        return optionalGroupId.isEmpty()
+        Optional<GroupId> exists = getByGroupId(groupId);
+        return exists.isEmpty()
                 ? groupIdRepository.save(groupId)
-                : optionalGroupId.get();
+                : exists.get();
     }
 
     @Override
     public Optional<GroupId> getByGroupId(GroupId groupId) {
-        return groupIdRepository.getByDateAndPromotionGroupIdAndGameType(groupId.getDate(), groupId.getPromotionGroupId(), groupId.getGameType());
+        return groupIdRepository.getByDateAndPromotionGroupIdAndGameType(
+                groupId.getDate(),
+                groupId.getPromotionGroupId(),
+                groupId.getGameType());
     }
 }

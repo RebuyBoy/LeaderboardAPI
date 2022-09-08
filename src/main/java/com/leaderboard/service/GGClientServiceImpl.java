@@ -61,11 +61,14 @@ public class GGClientServiceImpl implements ClientService {
 
     @Override
     public void runDailyDataFlow() {
-        LocalDate yesterday = ZonedDateTime
+        runDailyDataFlow(getTargetDay());
+    }
+
+    private LocalDate getTargetDay() {
+        return ZonedDateTime
                 .now(ZoneId.of(GMT_8))
                 .minusDays(1)
                 .toLocalDate();
-        runDailyDataFlow(yesterday);
     }
 
     @Override
@@ -118,6 +121,7 @@ public class GGClientServiceImpl implements ClientService {
         String gameType = groupsResponse.getGameTypes()[0];
         resultDTOS.stream()
                 .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType))
+                .peek(System.out::println)
                 .forEach(resultService::save);
     }
 
