@@ -9,7 +9,7 @@ import com.leaderboard.dto.response.SubsetsResponse;
 import com.leaderboard.entity.GroupId;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.ClientService;
-import com.leaderboard.service.interfaces.RequestService;
+import com.leaderboard.service.interfaces.GGRequestService;
 import com.leaderboard.service.interfaces.ResultService;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 import static com.leaderboard.constants.Constants.GGN_GROUP_ID_REQUEST_BASE;
 import static com.leaderboard.constants.Constants.GGN_SHORT_DECK_PROMO_URL;
-import static com.leaderboard.constants.Constants.GMT_8;
+import static com.leaderboard.constants.Constants.GMT_MINUS_8;
 import static com.leaderboard.constants.Constants.PROMO_URL_FORMAT;
 import static com.leaderboard.constants.Constants.STAKES_TO_PART_OF_URL;
 import static com.leaderboard.constants.Constants.SUITABLE_STAKES;
@@ -33,19 +33,20 @@ import static com.leaderboard.constants.Constants.SUITABLE_STAKES;
 @Service
 public class GGClientServiceImpl implements ClientService {
 
-    private final RequestService requestService;
+    private final GGRequestService ggRequestService;
     private final ResultResponseConverter resultConverter;
     private final ResultService resultService;
     private final GGGroupIdService groupIdService;
     private final GameTypeConverter gameTypeConverter;
     private GroupsResponse groupsResponse;
 
-    public GGClientServiceImpl(RequestService requestService
-            , ResultResponseConverter converter
-            , ResultService resultService
-            , GGGroupIdService groupIdService
-            , GameTypeConverter gameTypeConverter) {
-        this.requestService = requestService;
+    public GGClientServiceImpl(GGRequestService ggRequestService,
+                               ResultResponseConverter converter,
+                               ResultService resultService,
+                               GGGroupIdService groupIdService,
+                               GameTypeConverter gameTypeConverter) {
+
+        this.ggRequestService = ggRequestService;
         this.resultConverter = converter;
         this.resultService = resultService;
         this.groupIdService = groupIdService;
@@ -66,7 +67,7 @@ public class GGClientServiceImpl implements ClientService {
 
     private LocalDate getTargetDay() {
         return ZonedDateTime
-                .now(ZoneId.of(GMT_8))
+                .now(ZoneId.of(GMT_MINUS_8))
                 .minusDays(1)
                 .toLocalDate();
     }
@@ -85,7 +86,6 @@ public class GGClientServiceImpl implements ClientService {
                 }
             }
         } catch (Exception e) {
-            //logger
             e.printStackTrace();
         }
     }
@@ -97,10 +97,9 @@ public class GGClientServiceImpl implements ClientService {
 
     private void updateMonthlyData() {
         try {
-            System.out.println("started updateMonthlyData");
-            String responseWithGroupId = requestService.getHTMLBody(GGN_SHORT_DECK_PROMO_URL);
+            String responseWithGroupId = ggRequestService.getHTMLBody(GGN_SHORT_DECK_PROMO_URL);
             String groupIdStr = findGroupIdFromResponse(responseWithGroupId);
-            this.groupsResponse = requestService.groupIdRequest(getGroupIdRequestUrl(groupIdStr));
+            this.groupsResponse = ggRequestService.groupIdRequest(getGroupIdRequestUrl(groupIdStr));
             GroupId groupId = new GroupId.Builder()
                     .promotionGroupId(groupIdStr)
                     .date(getCurrentMonthYear())
@@ -108,7 +107,6 @@ public class GGClientServiceImpl implements ClientService {
                     .build();
             groupIdService.saveIfNotExists(groupId);
         } catch (Exception e) {
-            //logger
             e.printStackTrace();
         }
     }
@@ -121,15 +119,14 @@ public class GGClientServiceImpl implements ClientService {
     private void saveResults(LocalDate date, String stake, List<GGResultResponse> resultDTOS) {
         String gameType = groupsResponse.getGameTypes()[0];
         String provider = groupsResponse.getHost();
-        System.out.println("started saveResults");
         resultDTOS.stream()
-                .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType,provider))
+                .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType, provider))
                 .forEach(resultService::save);
     }
 
     private List<GGResultResponse> getGGResultDTOS(int promotionId, String stake) {
         String url = generateUrl(formatStake(stake), promotionId);
-        return requestService.promotionIdRequest(url);
+        return ggRequestService.promotionIdRequest(url);
     }
 
 

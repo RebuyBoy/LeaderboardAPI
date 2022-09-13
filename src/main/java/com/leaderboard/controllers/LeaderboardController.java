@@ -42,21 +42,23 @@ public class LeaderboardController extends BaseController {
 
     @GetMapping("/stake")
     @Operation(summary = "get last year results by gameType and stake if passed")
-    @Parameter(example = "gameType: HOLDEM/SHORT_DECK/OMAHA, stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
+    @Parameter(example = "GGNETWORK,SHORT_DECK,stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
     public List<AggregatedResultDTO> getAllByStake(@RequestParam(value = "provider") Provider provider,
                                                    @RequestParam(value = "gameType") GameType gameType,
                                                    @RequestParam(value = "stakeEquivalent") String stakeEquivalent) {
+
         return aggregateService.getAllByStake(provider, gameType, stakeEquivalent);
     }
 
     @GetMapping("/date")
     @Operation(summary = "get results by game type,stake and starting from date and ending with date if passed or current date")
-    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, gameType: HOLDEM/SHORT_DECK/OMAHA, stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
+    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05,GGNETWORK, SHORT_DECK, stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
     public List<AggregatedResultDTO> getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                                                   @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
                                                   @RequestParam(value = "gameType") GameType gameType,
                                                   @RequestParam(value = "stakeEquivalent") String stakeEquivalent,
                                                   @RequestParam(value = "provider") Provider provider) {
+
         return aggregateService.getAllByDate(start, end, provider, gameType, stakeEquivalent);
     }
 
@@ -67,6 +69,7 @@ public class LeaderboardController extends BaseController {
         if (Objects.isNull(end)) {
             end = LocalDate.now();
         }
+       //TODO provider
         clientService.runDailyDataFlow(start.datesUntil(end).collect(Collectors.toList()));
     }
 
