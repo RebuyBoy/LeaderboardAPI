@@ -9,4 +9,5 @@
     <include file="changes/leaderboard.003.add-game-type.xml" relativeToChangelogFile="true"/>
     <include file="changes/leaderboard.004.add-groupId-month-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/leaderboard.005.groupId-add-game-type.xml" relativeToChangelogFile="true"/>
+    <include file="changes/leaderboard.006.add-provider-column.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

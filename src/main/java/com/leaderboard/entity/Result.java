@@ -30,8 +30,8 @@ public class Result {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id")
     private DateLB date;
-
     private GameType gameType;
+    private Provider provider;
 
     public Result() {
     }
@@ -45,70 +45,79 @@ public class Result {
         this.stake = builder.stake;
         this.date = builder.date;
         this.gameType = builder.gameType;
+        this.provider = builder.provider;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getRank() {
-        return rank;
-    }
-
-    public BigDecimal getPrize() {
-        return prize;
-    }
-
-    public BigDecimal getPoint() {
-        return point;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Stake getStake() {
-        return stake;
-    }
-
-    public DateLB getDate() {
-        return date;
-    }
-
-    public GameType getGameType() {
-        return gameType;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getRank() {
+        return rank;
     }
 
     public void setRank(int rank) {
         this.rank = rank;
     }
 
+    public BigDecimal getPrize() {
+        return prize;
+    }
+
     public void setPrize(BigDecimal prize) {
         this.prize = prize;
+    }
+
+    public BigDecimal getPoint() {
+        return point;
     }
 
     public void setPoint(BigDecimal point) {
         this.point = point;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public Stake getStake() {
+        return stake;
     }
 
     public void setStake(Stake stake) {
         this.stake = stake;
     }
 
+    public DateLB getDate() {
+        return date;
+    }
+
     public void setDate(DateLB date) {
         this.date = date;
     }
 
+    public GameType getGameType() {
+        return gameType;
+    }
+
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
     @Override
@@ -143,6 +152,8 @@ public class Result {
     }
 
     public static final class Builder {
+
+        private Provider provider;
         private int id;
         private int rank;
         private BigDecimal prize;
@@ -189,6 +200,11 @@ public class Result {
 
         public Builder gameType(GameType gameType) {
             this.gameType = gameType;
+            return this;
+        }
+
+        public Builder provider(Provider provider) {
+            this.provider = provider;
             return this;
         }
 

@@ -6,12 +6,13 @@ import java.util.List;
 
 public class GroupsResponse {
 
-    int groupId;
-    String name;
+    private int groupId;
+    private String name;
     //Mojno podkluchit'  Jackson time module and change to LocalDate
-    Timestamp startedAt;
-    String[] gameTypes;
-    List<SetsResponse> sets;
+    private Timestamp startedAt;
+    private String[] gameTypes;
+    private String host;
+    private List<SetsResponse> sets;
 
     public int getGroupId() {
         return groupId;
@@ -53,6 +54,14 @@ public class GroupsResponse {
         this.startedAt = startedAt;
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
     @Override
     public String toString() {
         return "GroupsResponse{" +
@@ -60,6 +69,7 @@ public class GroupsResponse {
                 ", name='" + name + '\'' +
                 ", startedAt=" + startedAt +
                 ", gameTypes=" + Arrays.toString(gameTypes) +
+                ", host='" + host + '\'' +
                 ", sets=" + sets +
                 '}';
     }

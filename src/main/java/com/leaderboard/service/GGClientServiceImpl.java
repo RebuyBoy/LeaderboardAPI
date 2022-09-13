@@ -2,7 +2,7 @@ package com.leaderboard.service;
 
 import com.leaderboard.converters.GameTypeConverter;
 import com.leaderboard.converters.ResultResponseConverter;
-import com.leaderboard.dto.GGResultDTO;
+import com.leaderboard.dto.response.GGResultResponse;
 import com.leaderboard.dto.response.GroupsResponse;
 import com.leaderboard.dto.response.SetsResponse;
 import com.leaderboard.dto.response.SubsetsResponse;
@@ -97,6 +97,7 @@ public class GGClientServiceImpl implements ClientService {
 
     private void updateMonthlyData() {
         try {
+            System.out.println("started updateMonthlyData");
             String responseWithGroupId = requestService.getHTMLBody(GGN_SHORT_DECK_PROMO_URL);
             String groupIdStr = findGroupIdFromResponse(responseWithGroupId);
             this.groupsResponse = requestService.groupIdRequest(getGroupIdRequestUrl(groupIdStr));
@@ -113,19 +114,20 @@ public class GGClientServiceImpl implements ClientService {
     }
 
     private void handleData(LocalDate date, SubsetsResponse subset, String stake) {
-        List<GGResultDTO> resultDTOS = getGGResultDTOS(subset.getPromotionId(), stake);
+        List<GGResultResponse> resultDTOS = getGGResultDTOS(subset.getPromotionId(), stake);
         saveResults(date, stake, resultDTOS);
     }
 
-    private void saveResults(LocalDate date, String stake, List<GGResultDTO> resultDTOS) {
+    private void saveResults(LocalDate date, String stake, List<GGResultResponse> resultDTOS) {
         String gameType = groupsResponse.getGameTypes()[0];
+        String provider = groupsResponse.getHost();
+        System.out.println("started saveResults");
         resultDTOS.stream()
-                .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType))
-                .peek(System.out::println)
+                .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType,provider))
                 .forEach(resultService::save);
     }
 
-    private List<GGResultDTO> getGGResultDTOS(int promotionId, String stake) {
+    private List<GGResultResponse> getGGResultDTOS(int promotionId, String stake) {
         String url = generateUrl(formatStake(stake), promotionId);
         return requestService.promotionIdRequest(url);
     }
