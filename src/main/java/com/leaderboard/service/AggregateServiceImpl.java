@@ -49,7 +49,6 @@ public class AggregateServiceImpl implements AggregateService {
             end = LocalDate.now();
         }
         List<Result> resultsByDateBetween = resultRepository.getResultsByDateBetween(start, end);
-        System.out.println(resultsByDateBetween.get(0));
         return aggregate(resultsByDateBetween);
     }
 
@@ -89,47 +88,5 @@ public class AggregateServiceImpl implements AggregateService {
         }
         return resultDTOS;
     }
-
-    private List<AggregatedResultDTO> aggregateV2(List<Result> results) {
-        Map<Stake, Map<Player, AggregatedResultDTO>> aggregateMap = new HashMap<>();
-
-        results.forEach(result -> {
-            Stake stake = result.getStake();
-//            if(aggregateMap.putIfAbsent())
-//            aggregateMap.computeIfAbsent()
-
-
-            if (aggregateMap.containsKey(stake)) {
-                Map<Player, AggregatedResultDTO> playerAggregateMap = aggregateMap.get(stake);
-                Player player = result.getPlayer();
-                if (playerAggregateMap.containsKey(player)) {
-                    AggregatedResultDTO aggregateResultDTO = playerAggregateMap.get(player);
-                    aggregateResultDTO.setTotalPoints(aggregateResultDTO.getTotalPoints().add(result.getPoint()));
-                    aggregateResultDTO.setTotalPrize(aggregateResultDTO.getTotalPrize().add(result.getPrize()));
-                } else {
-                    playerAggregateMap.put(
-                            player,
-                            new AggregatedResultDTO.Builder()
-//                                    .stake(new StakeResponse(result.getStake().getStakeEquivalent()))
-                                    .player(new PlayerDTO.Builder()
-                                            .name(player.getName())
-                                            .country(player.getCountry())
-                                            .build())
-                                    .totalPoints(result.getPoint())
-                                    .totalPrize(result.getPrize())
-                                    .build());
-                }
-            } else {
-                aggregateMap.put(stake, new HashMap<>());
-            }
-        });
-
-        List<AggregatedResultDTO> resultDTOS = new ArrayList<>();
-        for (Map<Player, AggregatedResultDTO> value : aggregateMap.values()) {
-            resultDTOS.addAll(value.values());
-        }
-        return resultDTOS;
-    }
-
 
 }
