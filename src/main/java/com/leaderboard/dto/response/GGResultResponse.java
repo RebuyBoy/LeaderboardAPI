@@ -1,4 +1,4 @@
-package com.leaderboard.dto;
+package com.leaderboard.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 
-public class GGResultDTO {
+public class GGResultResponse {
+
     @JsonProperty("nickname")
     private String name;
     @JsonProperty("countryId")
@@ -68,8 +69,6 @@ public class GGResultDTO {
         this.rank = rank;
     }
 
-
-
     public int getStake() {
         return stake;
     }
@@ -88,4 +87,5 @@ public class GGResultDTO {
                 ", rank=" + rank +
                 '}';
     }
+
 }

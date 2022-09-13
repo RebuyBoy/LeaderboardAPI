@@ -3,11 +3,11 @@ package com.leaderboard.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leaderboard.dto.GGResultDTO;
+import com.leaderboard.dto.response.GGResultResponse;
 import com.leaderboard.dto.response.GroupsResponse;
 import com.leaderboard.dto.response.Response;
 import com.leaderboard.exceptions.NoResultException;
-import com.leaderboard.service.interfaces.RequestService;
+import com.leaderboard.service.interfaces.GGRequestService;
 import com.leaderboard.util.Aes;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +20,18 @@ import java.util.Objects;
 import static com.leaderboard.constants.Constants.SECRET_KEY;
 
 @Service
-public class GGRequestService implements RequestService {
+public class GGRequestServiceImpl implements GGRequestService {
+
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
 
-    public GGRequestService(ObjectMapper mapper) {
+    public GGRequestServiceImpl(ObjectMapper mapper) {
         this.restTemplate = new RestTemplate();
         this.mapper = mapper;
     }
 
     @Override
-    public List<GGResultDTO> promotionIdRequest(String url) {
+    public List<GGResultResponse> promotionIdRequest(String url) {
         try {
             ResponseEntity<Response> promotionIdResponse = restTemplate.exchange(url, HttpMethod.GET, null, Response.class);
             String secret = promotionIdResponse.getHeaders().get(SECRET_KEY).get(0);
@@ -50,7 +51,6 @@ public class GGRequestService implements RequestService {
 
     @Override
     public GroupsResponse groupIdRequest(String url) {
-        //TODO validations
         try {
             ResponseEntity<Response> response = restTemplate.exchange(url, HttpMethod.GET, null, Response.class);
             String secret = Objects.requireNonNull(response.getHeaders().get(SECRET_KEY)).get(0);
@@ -61,6 +61,5 @@ public class GGRequestService implements RequestService {
         }
         throw new NoResultException("groupIdRequest failed");
     }
-
 
 }
