@@ -1,6 +1,7 @@
 package com.leaderboard.service;
 
 import com.leaderboard.entity.Stake;
+import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.repository.StakeRepository;
 import com.leaderboard.service.interfaces.StakeService;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,9 @@ public class StakeServiceImpl implements StakeService {
     }
 
     @Override
-    public Optional<Stake> getByStakeEquivalent(BigDecimal stakeEquivalent) {
-        return stakeRepository.getByStakeEquivalent(stakeEquivalent);
+    public Stake getByStakeEquivalent(BigDecimal stakeEquivalent) {
+        return stakeRepository.getByStakeEquivalent(stakeEquivalent)
+                .orElseThrow(() -> new NoResultException("Stake not found by equivalent: " + stakeEquivalent));
     }
 
     @Override
@@ -28,7 +30,7 @@ public class StakeServiceImpl implements StakeService {
 
     @Override
     public Stake createIfNotExists(Stake stake) {
-        Optional<Stake> optionalStake = getByStakeEquivalent(stake.getStakeEquivalent());
+        Optional<Stake> optionalStake = stakeRepository.getByStakeEquivalent(stake.getStakeEquivalent());
         return optionalStake.isEmpty()
                 ? save(stake)
                 : optionalStake.get();
