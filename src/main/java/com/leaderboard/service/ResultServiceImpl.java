@@ -1,18 +1,11 @@
 package com.leaderboard.service;
 
-import com.leaderboard.entity.Country;
-import com.leaderboard.entity.DateLB;
-import com.leaderboard.entity.Player;
-import com.leaderboard.entity.Result;
-import com.leaderboard.entity.Stake;
+import com.leaderboard.entity.*;
 import com.leaderboard.repository.ResultRepository;
-import com.leaderboard.service.interfaces.CountryService;
-import com.leaderboard.service.interfaces.DateService;
-import com.leaderboard.service.interfaces.PlayerService;
-import com.leaderboard.service.interfaces.ResultService;
-import com.leaderboard.service.interfaces.StakeService;
+import com.leaderboard.service.interfaces.*;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -48,8 +41,20 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public List<Result> getAll() {
-        return resultRepository.findAll();
+    public List<Result> getAll(Provider provider, GameType gameType) {
+        return resultRepository.getResultsByProviderAndGameType(provider, gameType);
+    }
+
+    @Override
+    public List<Result> getAllByStake(Provider provider, GameType gameType, String stakeEquivalent) {
+        Stake stake = stakeService.getByStakeEquivalent(BigDecimal.valueOf(Double.parseDouble(stakeEquivalent)));
+        return resultRepository.getResultsByProviderAndGameTypeAndStake(provider, gameType, stake);
+    }
+
+    @Override
+    public List<Result> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, String stakeEquivalent) {
+        Stake stake = stakeService.getByStakeEquivalent(BigDecimal.valueOf(Double.parseDouble(stakeEquivalent)));
+        return resultRepository.getResultsByDateBetween(start, end);
     }
 
     public void save(Result result) {
@@ -74,7 +79,6 @@ public class ResultServiceImpl implements ResultService {
         //TODO check if exists result
         resultRepository.save(result);
     }
-
 
 
 }

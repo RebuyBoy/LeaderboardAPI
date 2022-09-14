@@ -2,13 +2,13 @@ package com.leaderboard.dto;
 
 import java.math.BigDecimal;
 
-public class AggregatedResultDTO {
+public class AggregatedResult {
 
     private final PlayerDTO player;
     private BigDecimal totalPrize;
     private BigDecimal totalPoints;
 
-    private AggregatedResultDTO(Builder builder) {
+    private AggregatedResult(Builder builder) {
         this.player = builder.player;
         this.totalPrize = builder.totalPrize;
         this.totalPoints = builder.totalPoints;
@@ -63,8 +63,8 @@ public class AggregatedResultDTO {
             return this;
         }
 
-        public AggregatedResultDTO build() {
-            return new AggregatedResultDTO(this);
+        public AggregatedResult build() {
+            return new AggregatedResult(this);
         }
     }
 
