@@ -11,6 +11,6 @@ public interface ResultService {
     List<Result> getByDateBetween(LocalDate from, LocalDate to);
     List<Result> getAll();
 
-    void save(Result result);
+    void saveIfNotExists(Result result);
 
 }

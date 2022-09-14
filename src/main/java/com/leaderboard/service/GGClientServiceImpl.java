@@ -121,7 +121,7 @@ public class GGClientServiceImpl implements ClientService {
         String provider = groupsResponse.getHost();
         resultDTOS.stream()
                 .map(resultDTO -> resultConverter.convert(resultDTO, date, stake, gameType, provider))
-                .forEach(resultService::save);
+                .forEach(resultService::saveIfNotExists);
     }
 
     private List<GGResultResponse> getGGResultDTOS(int promotionId, String stake) {

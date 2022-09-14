@@ -11,6 +11,8 @@ import com.leaderboard.service.interfaces.DateService;
 import com.leaderboard.service.interfaces.PlayerService;
 import com.leaderboard.service.interfaces.ResultService;
 import com.leaderboard.service.interfaces.StakeService;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -52,7 +54,7 @@ public class ResultServiceImpl implements ResultService {
         return resultRepository.findAll();
     }
 
-    public void save(Result result) {
+    public void saveIfNotExists(Result result) {
 
         Player player = playerService.createIfNotExists(result.getPlayer());
 
@@ -71,10 +73,12 @@ public class ResultServiceImpl implements ResultService {
         result.setStake(stake);
         result.setDate(date);
 
-        //TODO check if exists result
-        resultRepository.save(result);
+        ExampleMatcher ignoringIdMatcher = ExampleMatcher.matching()
+                .withIgnorePaths("id");
+        Example<Result> example = Example.of(result, ignoringIdMatcher);
+        if (!resultRepository.exists(example)) {
+            resultRepository.save(result);
+        }
     }
-
-
 
 }
