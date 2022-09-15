@@ -1,21 +1,15 @@
 package com.leaderboard.entity;
 
 public enum Provider {
-    GGNETWORK("GG", "USD"), WINAMAX("WM", "EUR");
+    GGNETWORK("GG"), WINAMAX("WM");
 
     private final String code;
-    private final String currency;
 
-    Provider(String code, String currency) {
+    Provider(String code) {
         this.code = code;
-        this.currency = currency;
     }
 
     public String getCode() {
         return code;
-    }
-
-    public String getCurrency() {
-        return currency;
     }
 }

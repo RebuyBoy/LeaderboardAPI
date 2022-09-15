@@ -1,56 +1,31 @@
 package com.leaderboard.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Objects;
 
-@Entity
-@Table(name = "stake")
-public class Stake {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stake_generator")
-    @SequenceGenerator(name = "stake_generator", sequenceName = "stake_sq", allocationSize = 1)
-    private int id;
-    private BigDecimal stakeEquivalent;
-    //TODO enum?
-    public Stake() {
+public enum Stake {
+    USD_2000("USD", BigDecimal.valueOf(20.0)),
+    USD_1000("USD", BigDecimal.valueOf(10.0)),
+    USD_500("USD", BigDecimal.valueOf(5.0)),
+    USD_200("USD", BigDecimal.valueOf(2.0)),
+    USD_100("USD", BigDecimal.valueOf(1.0)),
+    USD_50("USD", BigDecimal.valueOf(0.5)),
+    USD_25("USD", BigDecimal.valueOf(0.25)),
+    USD_10("USD", BigDecimal.valueOf(0.1));
+
+    private final String currency;
+    private final BigDecimal stakeEquivalent;
+
+    Stake(String currency, BigDecimal stakeEquivalent) {
+        this.currency = currency;
+        this.stakeEquivalent = stakeEquivalent;
     }
 
-    public Stake(BigDecimal stakeEquivalent) {
-        this.stakeEquivalent = stakeEquivalent;
+    public String getCurrency() {
+        return currency;
     }
 
     public BigDecimal getStakeEquivalent() {
         return stakeEquivalent;
     }
 
-    public void setStakeEquivalent(BigDecimal stake) {
-        this.stakeEquivalent = stake;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Stake stake1 = (Stake) o;
-        return Objects.equals(stakeEquivalent, stake1.stakeEquivalent);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(stakeEquivalent);
-    }
-
-    @Override
-    public String toString() {
-        return "Stake{" +
-                "id=" + id +
-                ", stake=" + stakeEquivalent +
-                '}';
-    }
 }

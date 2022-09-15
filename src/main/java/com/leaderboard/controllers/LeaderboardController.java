@@ -4,6 +4,7 @@ import com.leaderboard.dto.AggregatedResult;
 import com.leaderboard.dto.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
+import com.leaderboard.entity.Stake;
 import com.leaderboard.service.interfaces.AggregateService;
 import com.leaderboard.service.interfaces.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("results")
 @Tag(name = "LeaderboardController")
-public class LeaderboardController extends BaseController {
+public class LeaderboardController implements BaseController {
 
     private final AggregateService aggregateService;
     private final ClientService clientService;
@@ -34,39 +35,31 @@ public class LeaderboardController extends BaseController {
         this.clientService = clientService;
     }
 
-    @GetMapping()
-    @Operation(summary = "get last year results by gameType and stake if passed")
-    public ResultResponse getAll(@RequestParam(value = "provider") Provider provider,
-                                 @RequestParam(value = "gameType") GameType gameType) {
-        List<AggregatedResult> aggregatedResults = aggregateService.getAll(provider, gameType);
-        return new ResultResponse(provider.name(), provider.getCurrency(), aggregatedResults);
-    }
-
     @GetMapping("/stake")
-    @Operation(summary = "get last year results by gameType and stake if passed")
-    @Parameter(example = "GGNETWORK,SHORT_DECK,stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
+    @Operation(summary = "get last year results by provider, gameType and stake if passed")
     public ResultResponse getAllByStake(@RequestParam(value = "provider") Provider provider,
-                                        @RequestParam(value = "gameType") GameType gameType,
-                                        @RequestParam(value = "stakeEquivalent") String stakeEquivalent) {
-
-        List<AggregatedResult> aggregatedResults = aggregateService.getAllByStake(provider, gameType, stakeEquivalent);
-        return new ResultResponse(provider.name(), provider.getCurrency(), aggregatedResults);
+                                                   @RequestParam(value = "gameType") GameType gameType,
+                                                   @RequestParam(value = "stake", required = false) Stake stake) {
+        List<AggregatedResult> aggregatedResults = aggregateService.getAllByStake(provider, gameType, stake);
+        return new ResultResponse(provider.name(), stake.getCurrency(), aggregatedResults);
     }
 
     @GetMapping("/date")
-    @Operation(summary = "get results by game type,stake and starting from date and ending with date if passed or current date")
-    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05,GGNETWORK, SHORT_DECK, stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
+    @Operation(summary = "get results by date from start to end if passed or current date if not, by stake or last year if stake not passed")
+    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
     public ResultResponse getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                                       @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
-                                       @RequestParam(value = "gameType") GameType gameType,
-                                       @RequestParam(value = "stakeEquivalent") String stakeEquivalent,
-                                       @RequestParam(value = "provider") Provider provider) {
+                                                  @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
+                                                  @RequestParam(value = "provider") Provider provider,
+                                                  @RequestParam(value = "gameType") GameType gameType,
+                                                  @RequestParam(value = "stake", required = false) Stake stake) {
 
-        List<AggregatedResult> aggregatedResults = aggregateService.getAllByDate(start, end, provider, gameType, stakeEquivalent);
-        return new ResultResponse(provider.name(), provider.getCurrency(), aggregatedResults);
+        List<AggregatedResult> aggregatedResults = aggregateService.getAllByDate(start, end, provider, gameType, stake);
+        return new ResultResponse(provider.name(), stake.getCurrency(), aggregatedResults);
     }
 
     @GetMapping("/parse")
+    @Operation(summary = "parse results by date from start to end if passed or current date if not")
+    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
     public void parseData(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                           @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
                           @RequestParam(value = "provider") Provider provider) {

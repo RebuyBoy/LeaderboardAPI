@@ -24,8 +24,6 @@ public class Result {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id")
     private Player player;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stake_id")
     private Stake stake;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id")

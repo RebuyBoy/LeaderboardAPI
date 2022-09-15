@@ -14,12 +14,10 @@ public interface ResultService {
 
     List<Result> getByDateBetween(LocalDate from, LocalDate to);
 
-    List<Result> getAll(Provider provider, GameType gameType);
+    List<Result> getAllByStake(Provider provider, GameType gameType, Stake stake);
 
-    List<Result> getAllByStake(Provider provider, GameType gameType, String stakeEquivalent);
+    List<Result> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake);
 
-    List<Result> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, String stakeEquivalent);
-
-    void save(Result result);
+    void saveIfNotExists(Result result);
 
 }

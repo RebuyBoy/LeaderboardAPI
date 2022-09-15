@@ -6,20 +6,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-public abstract class BaseController {
+public interface BaseController {
 
     @ExceptionHandler(value = AesException.class)
-    public ResponseEntity<Object> exception(AesException exception) {
+    default ResponseEntity<Object> exception(AesException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.EXPECTATION_FAILED);
     }
 
     @ExceptionHandler(value = NoResultException.class)
-    public ResponseEntity<Object> exception(NoResultException exception) {
+    default ResponseEntity<Object> exception(NoResultException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = NullPointerException.class)
-    public ResponseEntity<Object> exception() {
+    default ResponseEntity<Object> exception(NullPointerException exception) {
+        exception.printStackTrace();
         return new ResponseEntity<>("Oooops something wrong. We are working!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
