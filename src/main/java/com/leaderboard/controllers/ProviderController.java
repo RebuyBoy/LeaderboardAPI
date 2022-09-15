@@ -22,7 +22,6 @@ public class ProviderController implements BaseController {
         this.providerService = providerService;
     }
 
-
     @GetMapping
     public List<ProviderResponse> getProviders() {
         return providerService.getProviders();

@@ -1,8 +1,14 @@
 package com.leaderboard.dto.api.response;
 
 public class ProviderResponse {
+
     private String code;
     private String name;
+
+    public ProviderResponse(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 
     public String getCode() {
         return code;

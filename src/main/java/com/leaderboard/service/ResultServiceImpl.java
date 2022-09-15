@@ -1,12 +1,6 @@
 package com.leaderboard.service;
 
-import com.leaderboard.entity.Country;
-import com.leaderboard.entity.DateLB;
-import com.leaderboard.entity.GameType;
-import com.leaderboard.entity.Player;
-import com.leaderboard.entity.Provider;
-import com.leaderboard.entity.Result;
-import com.leaderboard.entity.Stake;
+import com.leaderboard.entity.*;
 import com.leaderboard.repository.ResultRepository;
 import com.leaderboard.service.interfaces.CountryService;
 import com.leaderboard.service.interfaces.DateService;
@@ -85,6 +79,22 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public List<Provider> getAllProviders() {
         return resultRepository.getDistinctByProvider();
+    }
+
+    // TODO: 15.09.2022  LastUpdate from repo
+    @Override
+    public LocalDate getLastUpdateByProvider(Provider provider) {
+        return LocalDate.now();
+    }
+
+    @Override
+    public List<GameType> getGameTypesDataByProvider(Provider provider) {
+        return resultRepository.getGameTypeDistinctByProvider(provider);
+    }
+
+    @Override
+    public List<Stake> getStakesByByProviderAndGameType(Provider provider, GameType gameType) {
+        return resultRepository.getStakeDistinctByProviderAndGameType(provider, gameType);
     }
 
 }

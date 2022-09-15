@@ -11,6 +11,11 @@ public class ProviderDataResponse {
         return lastUpdate;
     }
 
+    public ProviderDataResponse(LocalDate lastUpdate, List<ProviderData> providersData) {
+        this.lastUpdate = lastUpdate;
+        this.providersData = providersData;
+    }
+
     public void setLastUpdate(LocalDate lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
