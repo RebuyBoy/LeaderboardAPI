@@ -19,7 +19,8 @@ public interface BaseController {
     }
 
     @ExceptionHandler(value = NullPointerException.class)
-    default ResponseEntity<Object> exception() {
+    default ResponseEntity<Object> exception(NullPointerException exception) {
+        exception.printStackTrace();
         return new ResponseEntity<>("Oooops something wrong. We are working!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

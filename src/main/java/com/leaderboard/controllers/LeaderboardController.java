@@ -1,6 +1,7 @@
 package com.leaderboard.controllers;
 
-import com.leaderboard.dto.AggregatedResultDTO;
+import com.leaderboard.dto.AggregatedResult;
+import com.leaderboard.dto.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Stake;
@@ -36,23 +37,24 @@ public class LeaderboardController implements BaseController {
 
     @GetMapping("/stake")
     @Operation(summary = "get last year results by provider, gameType and stake if passed")
-    public List<AggregatedResultDTO> getAllByStake(@RequestParam(value = "provider") Provider provider,
+    public ResultResponse getAllByStake(@RequestParam(value = "provider") Provider provider,
                                                    @RequestParam(value = "gameType") GameType gameType,
                                                    @RequestParam(value = "stake", required = false) Stake stake) {
-
-        return aggregateService.getAllByStake(provider, gameType, stake);
+        List<AggregatedResult> aggregatedResults = aggregateService.getAllByStake(provider, gameType, stake);
+        return new ResultResponse(provider.name(), stake.getCurrency(), aggregatedResults);
     }
 
     @GetMapping("/date")
     @Operation(summary = "get results by date from start to end if passed or current date if not, by stake or last year if stake not passed")
     @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
-    public List<AggregatedResultDTO> getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
+    public ResultResponse getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                                                   @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
                                                   @RequestParam(value = "provider") Provider provider,
                                                   @RequestParam(value = "gameType") GameType gameType,
                                                   @RequestParam(value = "stake", required = false) Stake stake) {
 
-        return aggregateService.getAllByDate(start, end, provider, gameType, stake);
+        List<AggregatedResult> aggregatedResults = aggregateService.getAllByDate(start, end, provider, gameType, stake);
+        return new ResultResponse(provider.name(), stake.getCurrency(), aggregatedResults);
     }
 
     @GetMapping("/parse")

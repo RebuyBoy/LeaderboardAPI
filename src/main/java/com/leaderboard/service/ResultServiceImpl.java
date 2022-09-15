@@ -2,8 +2,11 @@ package com.leaderboard.service;
 
 import com.leaderboard.entity.Country;
 import com.leaderboard.entity.DateLB;
+import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
+import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Result;
+import com.leaderboard.entity.Stake;
 import com.leaderboard.repository.ResultRepository;
 import com.leaderboard.service.interfaces.CountryService;
 import com.leaderboard.service.interfaces.DateService;
@@ -45,8 +48,13 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public List<Result> getAll() {
-        return resultRepository.findAll();
+    public List<Result> getAllByStake(Provider provider, GameType gameType, Stake stake) {
+        return resultRepository.getResultsByProviderAndGameTypeAndStake(provider, gameType, stake);
+    }
+
+    @Override
+    public List<Result> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake) {
+        return resultRepository.getResultsByDateBetween(start, end, provider, gameType, stake);
     }
 
     public void saveIfNotExists(Result result) {

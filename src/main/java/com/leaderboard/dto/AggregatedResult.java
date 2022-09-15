@@ -3,13 +3,13 @@ package com.leaderboard.dto;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class AggregatedResultDTO implements Comparable<AggregatedResultDTO> {
+public class AggregatedResult implements Comparable<AggregatedResult> {
 
     private final PlayerDTO player;
     private BigDecimal totalPrize;
     private BigDecimal totalPoints;
 
-    private AggregatedResultDTO(Builder builder) {
+    private AggregatedResult(Builder builder) {
         this.player = builder.player;
         this.totalPrize = builder.totalPrize;
         this.totalPoints = builder.totalPoints;
@@ -45,7 +45,7 @@ public class AggregatedResultDTO implements Comparable<AggregatedResultDTO> {
     }
 
     @Override
-    public int compareTo(AggregatedResultDTO o) {
+    public int compareTo(AggregatedResult o) {
         int byPrize = this.totalPrize.compareTo(o.totalPrize);
         return byPrize == 0 ? this.totalPoints.compareTo(o.totalPoints) : byPrize;
     }
@@ -54,7 +54,7 @@ public class AggregatedResultDTO implements Comparable<AggregatedResultDTO> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AggregatedResultDTO that = (AggregatedResultDTO) o;
+        AggregatedResult that = (AggregatedResult) o;
         return player.equals(that.player) && totalPrize.equals(that.totalPrize) && totalPoints.equals(that.totalPoints);
     }
 
@@ -62,6 +62,7 @@ public class AggregatedResultDTO implements Comparable<AggregatedResultDTO> {
     public int hashCode() {
         return Objects.hash(player, totalPrize, totalPoints);
     }
+
 
     public static class Builder {
         private PlayerDTO player;
@@ -83,8 +84,8 @@ public class AggregatedResultDTO implements Comparable<AggregatedResultDTO> {
             return this;
         }
 
-        public AggregatedResultDTO build() {
-            return new AggregatedResultDTO(this);
+        public AggregatedResult build() {
+            return new AggregatedResult(this);
         }
     }
 
