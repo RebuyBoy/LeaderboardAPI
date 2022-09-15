@@ -1,6 +1,6 @@
 package com.leaderboard.service.interfaces;
 
-import com.leaderboard.dto.AggregatedResult;
+import com.leaderboard.dto.api.AggregatedResult;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Stake;

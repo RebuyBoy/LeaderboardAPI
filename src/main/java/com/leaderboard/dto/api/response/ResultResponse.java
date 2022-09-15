@@ -1,6 +1,6 @@
-package com.leaderboard.dto.response;
+package com.leaderboard.dto.api.response;
 
-import com.leaderboard.dto.AggregatedResult;
+import com.leaderboard.dto.api.AggregatedResult;
 
 import java.util.List;
 

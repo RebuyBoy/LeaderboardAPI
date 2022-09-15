@@ -1,6 +1,6 @@
 package com.leaderboard.converters;
 
-import com.leaderboard.dto.response.GGResultResponse;
+import com.leaderboard.dto.client.gg.GGResultResponse;
 import com.leaderboard.entity.Country;
 import com.leaderboard.entity.DateLB;
 import com.leaderboard.entity.Player;

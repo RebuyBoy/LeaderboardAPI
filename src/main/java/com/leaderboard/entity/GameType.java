@@ -3,6 +3,7 @@ package com.leaderboard.entity;
 public enum GameType {
     SHORT_DECK("SD"),
     OMAHA("OM"),
+    SPIN_AND_GOLD("SG"),
     HOLDEM("HM");
 
     private final String code;
@@ -15,4 +16,10 @@ public enum GameType {
         return code;
     }
 
+    @Override
+    public String toString() {
+        return "GameType{" +
+                "code='" + code + '\'' +
+                '}';
+    }
 }

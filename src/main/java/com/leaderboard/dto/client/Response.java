@@ -1,4 +1,4 @@
-package com.leaderboard.dto.response;
+package com.leaderboard.dto.client;
 
 
 public class Response {

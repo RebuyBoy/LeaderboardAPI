@@ -1,7 +1,7 @@
 package com.leaderboard.controllers;
 
-import com.leaderboard.dto.AggregatedResult;
-import com.leaderboard.dto.response.ResultResponse;
+import com.leaderboard.dto.api.AggregatedResult;
+import com.leaderboard.dto.api.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Stake;
@@ -22,15 +22,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("results")
-@Tag(name = "LeaderboardController")
-public class LeaderboardController implements BaseController {
+@RequestMapping("v1/results")
+@Tag(name = "AggregateResultController")
+public class AggregatedResultController implements BaseController {
 
     private final AggregateService aggregateService;
     private final ClientService clientService;
 
-    public LeaderboardController(AggregateService aggregateService,
-                                 ClientService clientService) {
+    public AggregatedResultController(AggregateService aggregateService,
+                                      ClientService clientService) {
         this.aggregateService = aggregateService;
         this.clientService = clientService;
     }

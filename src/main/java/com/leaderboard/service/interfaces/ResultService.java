@@ -20,4 +20,12 @@ public interface ResultService {
 
     void saveIfNotExists(Result result);
 
+    List<Provider> getAllProviders();
+
+    LocalDate getLastUpdateByProvider(Provider provider);
+
+    List<GameType> getGameTypesDataByProvider(Provider provider);
+
+    List<Stake> getStakesByByProviderAndGameType(Provider provider, GameType gameType);
+
 }

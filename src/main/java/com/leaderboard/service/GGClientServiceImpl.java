@@ -2,10 +2,10 @@ package com.leaderboard.service;
 
 import com.leaderboard.converters.GameTypeConverter;
 import com.leaderboard.converters.ResultResponseConverter;
-import com.leaderboard.dto.response.GGResultResponse;
-import com.leaderboard.dto.response.GroupsResponse;
-import com.leaderboard.dto.response.SetsResponse;
-import com.leaderboard.dto.response.SubsetsResponse;
+import com.leaderboard.dto.client.gg.GGResultResponse;
+import com.leaderboard.dto.client.gg.GroupsResponse;
+import com.leaderboard.dto.client.gg.SetsResponse;
+import com.leaderboard.dto.client.gg.SubsetsResponse;
 import com.leaderboard.entity.GroupId;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.ClientService;

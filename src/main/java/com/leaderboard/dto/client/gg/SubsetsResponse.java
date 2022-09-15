@@ -1,4 +1,4 @@
-package com.leaderboard.dto.response;
+package com.leaderboard.dto.client.gg;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
