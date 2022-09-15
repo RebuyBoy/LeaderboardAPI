@@ -1,7 +1,7 @@
 package com.leaderboard.service;
 
-import com.leaderboard.dto.AggregatedResult;
-import com.leaderboard.dto.PlayerDTO;
+import com.leaderboard.dto.api.AggregatedResult;
+import com.leaderboard.dto.api.response.PlayerResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
 import com.leaderboard.entity.Provider;
@@ -62,7 +62,7 @@ public class AggregateServiceImpl implements AggregateService {
                             player,
                             new AggregatedResult.Builder()
 //                                    .stake(new StakeResponse(result.getStake().getStakeEquivalent()))
-                                    .player(new PlayerDTO.Builder()
+                                    .player(new PlayerResponse.Builder()
                                             .name(player.getName())
                                             .country(player.getCountry())
                                             .build())

@@ -1,11 +1,13 @@
-package com.leaderboard.dto;
+package com.leaderboard.dto.api;
+
+import com.leaderboard.dto.api.response.PlayerResponse;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class AggregatedResult implements Comparable<AggregatedResult> {
 
-    private final PlayerDTO player;
+    private final PlayerResponse player;
     private BigDecimal totalPrize;
     private BigDecimal totalPoints;
 
@@ -15,7 +17,7 @@ public class AggregatedResult implements Comparable<AggregatedResult> {
         this.totalPoints = builder.totalPoints;
     }
 
-    public PlayerDTO getPlayer() {
+    public PlayerResponse getPlayer() {
         return player;
     }
 
@@ -65,11 +67,11 @@ public class AggregatedResult implements Comparable<AggregatedResult> {
 
 
     public static class Builder {
-        private PlayerDTO player;
+        private PlayerResponse player;
         private BigDecimal totalPrize;
         private BigDecimal totalPoints;
 
-        public Builder player(PlayerDTO player) {
+        public Builder player(PlayerResponse player) {
             this.player = player;
             return this;
         }

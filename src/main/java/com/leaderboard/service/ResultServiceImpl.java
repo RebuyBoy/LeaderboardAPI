@@ -82,4 +82,9 @@ public class ResultServiceImpl implements ResultService {
         }
     }
 
+    @Override
+    public List<Provider> getAllProviders() {
+        return resultRepository.getDistinctByProvider();
+    }
+
 }

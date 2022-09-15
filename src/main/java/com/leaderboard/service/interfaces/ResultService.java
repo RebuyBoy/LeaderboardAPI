@@ -20,4 +20,6 @@ public interface ResultService {
 
     void saveIfNotExists(Result result);
 
+    List<Provider> getAllProviders();
+
 }

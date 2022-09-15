@@ -1,14 +1,14 @@
-package com.leaderboard.dto;
+package com.leaderboard.dto.api.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.leaderboard.entity.Country;
 
-public class PlayerDTO {
+public class PlayerResponse {
     private final String name;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private final Country country;
 
-    private PlayerDTO(Builder builder) {
+    private PlayerResponse(Builder builder) {
         this.name = builder.name;
         this.country = builder.country;
     }
@@ -35,8 +35,8 @@ public class PlayerDTO {
             return this;
         }
 
-        public PlayerDTO build() {
-            return new PlayerDTO(this);
+        public PlayerResponse build() {
+            return new PlayerResponse(this);
         }
     }
 }

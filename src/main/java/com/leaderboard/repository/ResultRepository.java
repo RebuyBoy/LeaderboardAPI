@@ -23,5 +23,7 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
     List<Result> getResultsByDateBetween(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake);
     List<Result> getResultsByProviderAndGameTypeAndStake(Provider provider, GameType gameType, Stake stake);
 
+    @Query("SELECT DISTINCT r.provider FROM Result r")
+    List<Provider> getDistinctByProvider();
 }
 

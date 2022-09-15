@@ -1,7 +1,7 @@
 package com.leaderboard.service.interfaces;
 
-import com.leaderboard.dto.response.GGResultResponse;
-import com.leaderboard.dto.response.GroupsResponse;
+import com.leaderboard.dto.client.gg.GGResultResponse;
+import com.leaderboard.dto.client.gg.GroupsResponse;
 
 import java.util.List;
 
