@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sergey_M" id="leaderboard.007.add-column-stake-instead-table.xml">
+
+        <dropTable cascadeConstraints="true"
+                   catalogName="LeaderboardDB"
+                   schemaName="public"
+                   tableName="stake"/>
+
+        <dropSequence  catalogName="LeaderboardDB"
+                       schemaName="public"
+                       sequenceName="stake_sq"/>
+
+        <renameColumn  catalogName="LeaderboardDB"
+                       schemaName="public"
+                       tableName="result"
+                       newColumnName="stake"
+                       oldColumnName="stake_id"/>
+
+        <modifyDataType  catalogName="LeaderboardDB"
+                         columnName="stake"
+                         newDataType="varchar(20)"
+                         schemaName="public"
+                         tableName="result"/>
+
+    </changeSet>
+
+</databaseChangeLog>

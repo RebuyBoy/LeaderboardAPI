@@ -3,6 +3,7 @@ package com.leaderboard.controllers;
 import com.leaderboard.dto.AggregatedResultDTO;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
+import com.leaderboard.entity.Stake;
 import com.leaderboard.service.interfaces.AggregateService;
 import com.leaderboard.service.interfaces.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("results")
 @Tag(name = "LeaderboardController")
-public class LeaderboardController extends BaseController {
+public class LeaderboardController implements BaseController {
 
     private final AggregateService aggregateService;
     private final ClientService clientService;
@@ -33,43 +34,37 @@ public class LeaderboardController extends BaseController {
         this.clientService = clientService;
     }
 
-    @GetMapping()
-    @Operation(summary = "get last year results by gameType and stake if passed")
-    public List<AggregatedResultDTO> getAll(@RequestParam(value = "provider") Provider provider,
-                                            @RequestParam(value = "gameType") GameType gameType) {
-        return aggregateService.getAll(provider, gameType);
-    }
-
     @GetMapping("/stake")
-    @Operation(summary = "get last year results by gameType and stake if passed")
-    @Parameter(example = "GGNETWORK,SHORT_DECK,stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
+    @Operation(summary = "get last year results by provider, gameType and stake if passed")
     public List<AggregatedResultDTO> getAllByStake(@RequestParam(value = "provider") Provider provider,
                                                    @RequestParam(value = "gameType") GameType gameType,
-                                                   @RequestParam(value = "stakeEquivalent") String stakeEquivalent) {
+                                                   @RequestParam(value = "stake", required = false) Stake stake) {
 
-        return aggregateService.getAllByStake(provider, gameType, stakeEquivalent);
+        return aggregateService.getAllByStake(provider, gameType, stake);
     }
 
     @GetMapping("/date")
-    @Operation(summary = "get results by game type,stake and starting from date and ending with date if passed or current date")
-    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05,GGNETWORK, SHORT_DECK, stakeEquivalent: 10/5/2/1/0.5/0.25/0.1")
+    @Operation(summary = "get results by date from start to end if passed or current date if not, by stake or last year if stake not passed")
+    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
     public List<AggregatedResultDTO> getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                                                   @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
+                                                  @RequestParam(value = "provider") Provider provider,
                                                   @RequestParam(value = "gameType") GameType gameType,
-                                                  @RequestParam(value = "stakeEquivalent") String stakeEquivalent,
-                                                  @RequestParam(value = "provider") Provider provider) {
+                                                  @RequestParam(value = "stake", required = false) Stake stake) {
 
-        return aggregateService.getAllByDate(start, end, provider, gameType, stakeEquivalent);
+        return aggregateService.getAllByDate(start, end, provider, gameType, stake);
     }
 
     @GetMapping("/parse")
+    @Operation(summary = "parse results by date from start to end if passed or current date if not")
+    @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
     public void parseData(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
                           @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
                           @RequestParam(value = "provider") Provider provider) {
         if (Objects.isNull(end)) {
             end = LocalDate.now();
         }
-       //TODO provider
+        //TODO provider
         clientService.runDailyDataFlow(start.datesUntil(end).collect(Collectors.toList()));
     }
 

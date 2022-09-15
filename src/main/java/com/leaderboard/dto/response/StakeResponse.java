@@ -3,20 +3,20 @@ package com.leaderboard.dto.response;
 import java.math.BigDecimal;
 
 public class StakeResponse {
-    private BigDecimal StakeEquivalent;
+    private BigDecimal stakeEquivalent;
 
     public StakeResponse(BigDecimal stakeEquivalent) {
-        StakeEquivalent = stakeEquivalent;
+        this.stakeEquivalent = stakeEquivalent;
     }
 
     public BigDecimal getStakeEquivalent() {
-        return StakeEquivalent;
+        return stakeEquivalent;
     }
 
     @Override
     public String toString() {
         return "StakeDTO{" +
-                "StakeEquivalent=" + StakeEquivalent +
+                "StakeEquivalent=" + stakeEquivalent +
                 '}';
     }
 }

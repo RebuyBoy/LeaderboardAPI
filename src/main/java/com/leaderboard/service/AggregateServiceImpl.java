@@ -7,50 +7,43 @@ import com.leaderboard.entity.Player;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Result;
 import com.leaderboard.entity.Stake;
-import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.repository.ResultRepository;
 import com.leaderboard.service.interfaces.AggregateService;
-import com.leaderboard.service.interfaces.StakeService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.leaderboard.constants.Constants.GMT_MINUS_8;
+
 @Service
 public class AggregateServiceImpl implements AggregateService {
     private final ResultRepository resultRepository;
-    private final StakeService stakeService;
 
-    public AggregateServiceImpl(ResultRepository resultRepository,
-                                StakeService stakeService) {
+    public AggregateServiceImpl(ResultRepository resultRepository) {
         this.resultRepository = resultRepository;
-        this.stakeService = stakeService;
     }
 
     @Override
-    public List<AggregatedResultDTO> getAll(Provider provider, GameType gameType) {
-        return aggregate(resultRepository.getResultsByProviderAndGameType(provider, gameType));
-    }
-
-    @Override
-    public List<AggregatedResultDTO> getAllByStake(Provider provider, GameType gameType, String stakeEquivalent) {
-        Stake stake = stakeService.getByStakeEquivalent(BigDecimal.valueOf(Double.parseDouble(stakeEquivalent)))
-                .orElseThrow(() -> new NoResultException("Stake not found by equivalent: " + stakeEquivalent));
+    public List<AggregatedResultDTO> getAllByStake(Provider provider, GameType gameType, Stake stake) {
         return aggregate(resultRepository.getResultsByProviderAndGameTypeAndStake(provider, gameType, stake));
     }
 
     @Override
-    public List<AggregatedResultDTO> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, String stakeEquivalent) {
+    public List<AggregatedResultDTO> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake) {
         if (end == null) {
-            end = LocalDate.now();
+            end = LocalDate.now((ZoneId.of(GMT_MINUS_8)));
         }
-        List<Result> resultsByDateBetween = resultRepository.getResultsByDateBetween(start, end);
+        List<Result> resultsByDateBetween = resultRepository.getResultsByDateBetween(start, end, provider, gameType, stake);
         return aggregate(resultsByDateBetween);
     }
+
+
 
     private List<AggregatedResultDTO> aggregate(List<Result> results) {
         Map<Stake, Map<Player, AggregatedResultDTO>> aggregateMap = new HashMap<>();
@@ -86,6 +79,7 @@ public class AggregateServiceImpl implements AggregateService {
         for (Map<Player, AggregatedResultDTO> value : aggregateMap.values()) {
             resultDTOS.addAll(value.values());
         }
+        resultDTOS.sort(Collections.reverseOrder());
         return resultDTOS;
     }
 
