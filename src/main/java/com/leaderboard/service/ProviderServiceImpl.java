@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,17 +45,17 @@ public class ProviderServiceImpl implements ProviderService {
 
         for (GameType gameTypeDatum : gameTypeData) {
             // TODO: 15.09.2022 sort bu stake
-            List<Stake> stakes =  resultService.getStakesByByProviderAndGameType(provider, gameTypeDatum);
+            List<Stake> stakes = resultService.getStakesByByProviderAndGameType(provider, gameTypeDatum);
             providersData.add(new ProviderData(gameTypeDatum, stakes));
         }
 
         return new ProviderDataResponse(null, providersData);
     }
 
-    // TODO: 15.09.2022 Exep for redirect
-    private Provider getProvider(String provider) {
-        return Provider.valueOf(provider);
+    private Provider getProvider(String providerStr) {
+        return Arrays.stream(Provider.values())
+                .filter(provider -> provider.name().equals(providerStr))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Provider not found by name " + providerStr));
     }
-
-
 }
