@@ -27,7 +27,7 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
     @Query("SELECT DISTINCT r.provider FROM Result r")
     List<Provider> getDistinctByProvider();
 
-    @Query("SELECT DISTINCT r.gameType FROM Result r WHERE r.provider = ?1")
+    @Query("SELECT DISTINCT r.gameType FROM Result r WHERE r.provider = ?1 ORDER BY r.gameType")
     List<GameType> getGameTypeDistinctByProvider(Provider provider);
 
     @Query("SELECT DISTINCT r.stake FROM Result r WHERE r.provider = ?1 AND r.gameType = ?2")
