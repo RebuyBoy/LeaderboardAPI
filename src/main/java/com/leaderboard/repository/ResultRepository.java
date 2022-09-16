@@ -1,6 +1,9 @@
 package com.leaderboard.repository;
 
-import com.leaderboard.entity.*;
+import com.leaderboard.entity.GameType;
+import com.leaderboard.entity.Provider;
+import com.leaderboard.entity.Result;
+import com.leaderboard.entity.Stake;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,6 +32,9 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
 
     @Query("SELECT DISTINCT r.stake FROM Result r WHERE r.provider = ?1 AND r.gameType = ?2")
     List<Stake> getStakeDistinctByProviderAndGameType(Provider provider, GameType gameType);
+
+    @Query("SELECT MAX(d.date) FROM Result r JOIN r.date d WHERE r.provider = ?1")
+    LocalDate getLastUpdateByProvider(Provider provider);
 
 }
 

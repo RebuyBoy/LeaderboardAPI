@@ -16,10 +16,4 @@ public enum GameType {
         return code;
     }
 
-    @Override
-    public String toString() {
-        return "GameType{" +
-                "code='" + code + '\'' +
-                '}';
-    }
 }
