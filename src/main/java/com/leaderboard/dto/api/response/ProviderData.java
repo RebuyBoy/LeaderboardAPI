@@ -1,16 +1,15 @@
 package com.leaderboard.dto.api.response;
 
 import com.leaderboard.entity.GameType;
-import com.leaderboard.entity.Stake;
 
 import java.util.List;
 
 public class ProviderData {
 
     private GameType gameType;
-    private List<Stake> stakeList;
+    private List<StakeResponse> stakeList;
 
-    public ProviderData(GameType gameType, List<Stake> stakeList) {
+    public ProviderData(GameType gameType, List<StakeResponse> stakeList) {
         this.gameType = gameType;
         this.stakeList = stakeList;
     }
@@ -23,8 +22,12 @@ public class ProviderData {
         this.gameType = gameType;
     }
 
-    public List<Stake> getStakeList() {
+    public List<StakeResponse> getStakeList() {
         return stakeList;
+    }
+
+    public void setStakeList(List<StakeResponse> stakeList) {
+        this.stakeList = stakeList;
     }
 
     @Override
@@ -33,9 +36,5 @@ public class ProviderData {
                 "gameType=" + gameType +
                 ", stakeList=" + stakeList +
                 '}';
-    }
-
-    public void setStakeList(List<Stake> stakeList) {
-        this.stakeList = stakeList;
     }
 }

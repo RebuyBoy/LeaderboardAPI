@@ -3,6 +3,7 @@ package com.leaderboard.service;
 import com.leaderboard.dto.api.response.ProviderData;
 import com.leaderboard.dto.api.response.ProviderDataResponse;
 import com.leaderboard.dto.api.response.ProviderResponse;
+import com.leaderboard.dto.api.response.StakeResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Stake;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProviderServiceImpl implements ProviderService {
@@ -31,7 +31,7 @@ public class ProviderServiceImpl implements ProviderService {
         return resultService.getAllProviders()
                 .stream()
                 .map(allProvider -> new ProviderResponse(allProvider.name(), allProvider.getDescription()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -44,8 +44,11 @@ public class ProviderServiceImpl implements ProviderService {
         List<ProviderData> providersData = new ArrayList<>();
 
         for (GameType gameTypeDatum : gameTypeData) {
-            List<Stake> stakes = resultService.getStakesByByProviderAndGameType(provider, gameTypeDatum);
-            stakes.sort(Comparator.comparing(Stake::getStakeEquivalent).reversed());
+            List<StakeResponse> stakes = resultService.getStakesByByProviderAndGameType(provider, gameTypeDatum)
+                    .stream()
+                    .sorted(Comparator.comparing(Stake::getStakeEquivalent).reversed())
+                    .map(stake -> new StakeResponse(stake.getCurrency(), stake.getStakeEquivalent().toString()))
+                    .toList();
             providersData.add(new ProviderData(gameTypeDatum, stakes));
         }
         return new ProviderDataResponse(lastUpdate, providersData);
