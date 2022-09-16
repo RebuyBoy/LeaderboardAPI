@@ -1,9 +1,12 @@
 package com.leaderboard.dto.api.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class ProviderDataResponse {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate lastUpdate;
     private List<ProviderData> providersData;
 
