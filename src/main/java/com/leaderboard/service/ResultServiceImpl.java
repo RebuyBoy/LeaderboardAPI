@@ -1,6 +1,5 @@
 package com.leaderboard.service;
 
-import com.leaderboard.entity.Country;
 import com.leaderboard.entity.DateLB;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
@@ -8,7 +7,6 @@ import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Result;
 import com.leaderboard.entity.Stake;
 import com.leaderboard.repository.ResultRepository;
-import com.leaderboard.service.interfaces.CountryService;
 import com.leaderboard.service.interfaces.DateService;
 import com.leaderboard.service.interfaces.PlayerService;
 import com.leaderboard.service.interfaces.ResultService;
@@ -18,22 +16,18 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResultServiceImpl implements ResultService {
 
     private final ResultRepository resultRepository;
     private final PlayerService playerService;
-    private final CountryService countryService;
     private final DateService dateService;
 
-    public ResultServiceImpl(PlayerService playerService
-            , ResultRepository resultRepository
-            , CountryService countryService
-            , DateService dateService) {
-        this.playerService = playerService;
+    public ResultServiceImpl(ResultRepository resultRepository, PlayerService playerService, DateService dateService) {
         this.resultRepository = resultRepository;
-        this.countryService = countryService;
+        this.playerService = playerService;
         this.dateService = dateService;
     }
 
@@ -57,28 +51,39 @@ public class ResultServiceImpl implements ResultService {
         return resultRepository.getResultsByDateBetween(start, end, provider, gameType, stake);
     }
 
+    @Override
     public void saveIfNotExists(Result result) {
 
-        Player player = playerService.createIfNotExists(result.getPlayer());
-
-        String oldCode = player.getCountry().getCode();
-        String newCode = result.getPlayer().getCountry().getCode();
-        if (!newCode.equals(oldCode)) {
-            Country country = countryService.getByCode(newCode);
-            player.setCountry(country);
-            player = playerService.save(player);
-        }
-
-        DateLB date = dateService.createIfNotExist(result.getDate());
+        Player player = getPlayer(result.getPlayer());
+        DateLB date = getDateLB(result);
 
         result.setPlayer(player);
         result.setDate(date);
 
+        saveResult(result);
+    }
+
+    private void saveResult(Result result) {
         ExampleMatcher ignoringIdMatcher = ExampleMatcher.matching()
                 .withIgnorePaths("id");
         Example<Result> example = Example.of(result, ignoringIdMatcher);
         if (!resultRepository.exists(example)) {
             resultRepository.save(result);
+        }
+    }
+
+    private DateLB getDateLB(Result result) {
+        return dateService.createIfNotExist(result.getDate());
+    }
+
+    private Player getPlayer(Player newPlayer) {
+        Optional<Player> optionalPlayer = playerService.getByName(newPlayer.getName());
+        if (optionalPlayer.isPresent()) {
+            Player currentPlayer = optionalPlayer.get();
+            playerService.updatePlayer(newPlayer, currentPlayer);
+            return currentPlayer;
+        } else {
+            return playerService.save(newPlayer);
         }
     }
 
