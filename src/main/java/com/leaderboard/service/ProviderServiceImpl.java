@@ -7,6 +7,7 @@ import com.leaderboard.dto.api.response.StakeResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Stake;
+import com.leaderboard.exceptions.ProviderNotFoundException;
 import com.leaderboard.service.interfaces.ProviderService;
 import com.leaderboard.service.interfaces.ResultService;
 import org.springframework.stereotype.Service;
@@ -61,11 +62,11 @@ public class ProviderServiceImpl implements ProviderService {
                 .toList();
     }
 
-    private Provider getProvider(String providerStr) {
+    private Provider getProvider(String provider) {
         return Arrays.stream(Provider.values())
-                .filter(provider -> provider.name().equals(providerStr))
+                .filter(value -> value.name().equals(provider))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Provider not found by name " + providerStr));
+                .orElseThrow(() -> new ProviderNotFoundException("Provider not found by name " + provider));
     }
 
 }
