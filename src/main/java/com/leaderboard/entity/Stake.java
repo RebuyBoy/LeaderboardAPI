@@ -3,6 +3,7 @@ package com.leaderboard.entity;
 import java.math.BigDecimal;
 
 public enum Stake {
+
     USD_2000(BigDecimal.valueOf(20.0)),
     USD_1000(BigDecimal.valueOf(10.0)),
     USD_500(BigDecimal.valueOf(5.0)),

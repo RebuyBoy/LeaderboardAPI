@@ -68,6 +68,7 @@ public class GroupId {
     }
 
     public static final class Builder {
+
         private LocalDate date;
         private GameType gameType;
         private String promotionGroupId;
@@ -90,6 +91,7 @@ public class GroupId {
         public GroupId build() {
             return new GroupId(this);
         }
+
     }
 
 }

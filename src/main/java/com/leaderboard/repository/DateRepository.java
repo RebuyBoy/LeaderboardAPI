@@ -9,5 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface DateRepository extends JpaRepository<DateLB, Integer> {
+
     Optional<DateLB> getByDate(LocalDate date);
+
 }

@@ -37,4 +37,5 @@ public class ProviderData {
                 ", stakeList=" + stakeList +
                 '}';
     }
+
 }

@@ -14,6 +14,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "player")
 public class Player {
+
     @Id
     @SequenceGenerator(name = "player_generator", sequenceName = "player_sq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_generator")
@@ -76,6 +77,7 @@ public class Player {
     }
 
     public static final class Builder {
+
         private int id;
         private String name;
         private Country country;
@@ -99,5 +101,6 @@ public class Player {
             return new Player(this);
         }
     }
+
 }
 

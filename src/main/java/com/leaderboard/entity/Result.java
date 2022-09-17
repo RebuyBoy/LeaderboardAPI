@@ -207,7 +207,6 @@ public class Result {
         }
 
         public Result build() {
-            //TODO validation??
             return new Result(this);
         }
 

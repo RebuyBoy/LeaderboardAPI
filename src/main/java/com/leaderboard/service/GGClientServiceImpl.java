@@ -14,10 +14,8 @@ import com.leaderboard.service.interfaces.ResultService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -91,8 +89,7 @@ public class GGClientServiceImpl implements ClientService {
     }
 
     private boolean isOutdatedMonth(GroupsResponse groupsResponse, LocalDate date) {
-        Month month = groupsResponse.getStartedAt().toLocalDateTime().getMonth();
-        return !month.equals(date.getMonth());
+        return groupsResponse.getStartedAt().getMonthValue() != (date.getMonthValue());
     }
 
     private void updateMonthlyData() {
@@ -132,7 +129,7 @@ public class GGClientServiceImpl implements ClientService {
 
     private SetsResponse findSetByDate(GroupsResponse groupsResponse, LocalDate date) {
         return groupsResponse.getSets().stream()
-                .filter(sets -> parseDate(sets.getDate()).equals(date))
+                .filter(set -> set.getDate().equals(date))
                 .findFirst()
                 .orElseThrow(() -> new NoResultException("Promotions not found by date: " + date));
     }
@@ -147,11 +144,6 @@ public class GGClientServiceImpl implements ClientService {
 
     private String generateUrl(String stake, int promotionId) {
         return String.format(PROMO_URL_FORMAT, promotionId, stake);
-    }
-
-    private LocalDate parseDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        return LocalDate.parse(date, formatter);
     }
 
     private String formatStake(String stake) {

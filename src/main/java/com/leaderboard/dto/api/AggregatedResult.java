@@ -65,8 +65,8 @@ public class AggregatedResult implements Comparable<AggregatedResult> {
         return Objects.hash(player, totalPrize, totalPoints);
     }
 
-
     public static class Builder {
+
         private PlayerResponse player;
         private BigDecimal totalPrize;
         private BigDecimal totalPoints;
@@ -89,6 +89,7 @@ public class AggregatedResult implements Comparable<AggregatedResult> {
         public AggregatedResult build() {
             return new AggregatedResult(this);
         }
+
     }
 
 }

@@ -1,20 +1,23 @@
 package com.leaderboard.dto.client.gg;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class SetsResponse {
+
     @JsonProperty("name")
-    private String date;
-    //TODO  to localDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+    private LocalDate date;
     private List<SubsetsResponse> subsets;
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -33,4 +36,5 @@ public class SetsResponse {
                 ", subsets=" + subsets +
                 '}';
     }
+
 }

@@ -2,6 +2,7 @@ package com.leaderboard.dto.client;
 
 
 public class Response {
+
     private String data;
 
     public String getData() {
@@ -18,4 +19,5 @@ public class Response {
                 "data='" + data + '\'' +
                 '}';
     }
+
 }

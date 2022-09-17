@@ -3,6 +3,7 @@ package com.leaderboard.dto.client.gg;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SubsetsResponse {
+
     private int promotionId;
     @JsonProperty("name")
     private String stake;
@@ -30,4 +31,5 @@ public class SubsetsResponse {
                 ", stake='" + stake + '\'' +
                 '}';
     }
+
 }

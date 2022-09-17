@@ -26,4 +26,5 @@ public enum Provider {
     public String getCurrency() {
         return currency;
     }
+
 }
