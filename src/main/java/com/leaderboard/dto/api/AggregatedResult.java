@@ -48,8 +48,8 @@ public class AggregatedResult implements Comparable<AggregatedResult> {
 
     @Override
     public int compareTo(AggregatedResult o) {
-        int byPrize = this.totalPrize.compareTo(o.totalPrize);
-        return byPrize == 0 ? this.totalPoints.compareTo(o.totalPoints) : byPrize;
+        int byPrize = this.totalPrize.compareTo(o.totalPrize) * -1;
+        return byPrize == 0 ? this.totalPoints.compareTo(o.totalPoints) * -1 : byPrize;
     }
 
     @Override
