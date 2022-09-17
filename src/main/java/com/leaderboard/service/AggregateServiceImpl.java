@@ -2,6 +2,8 @@ package com.leaderboard.service;
 
 import com.leaderboard.dto.api.AggregatedResult;
 import com.leaderboard.dto.api.response.PlayerResponse;
+import com.leaderboard.dto.api.response.ProviderResponse;
+import com.leaderboard.dto.api.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
 import com.leaderboard.entity.Provider;
@@ -31,19 +33,19 @@ public class AggregateServiceImpl implements AggregateService {
     }
 
     @Override
-    public List<AggregatedResult> getAllByStake(Provider provider, GameType gameType, Stake stake) {
-        return aggregate(resultService.getAllByStake(provider, gameType, stake));
+    public ResultResponse getAllByStake(Provider provider, GameType gameType, Stake stake) {
+        List<AggregatedResult> aggregate = aggregate(resultService.getAllByStake(provider, gameType, stake));
+        return new ResultResponse(new ProviderResponse(provider.name(), provider.getDescription(), provider.getCurrency()), aggregate);
     }
 
     @Override
-    public List<AggregatedResult> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake) {
+    public ResultResponse getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake) {
         if (end == null) {
             end = LocalDate.now((ZoneId.of(GMT_MINUS_8)));
         }
-        List<Result> resultsByDateBetween = resultService.getAllByDate(start, end, provider, gameType, stake);
-        return aggregate(resultsByDateBetween);
+        List<AggregatedResult> aggregatedResultsByDateBetween = aggregate(resultService.getAllByDate(start, end, provider, gameType, stake));
+        return new ResultResponse(new ProviderResponse(provider.name(), provider.getDescription(), provider.getCurrency()), aggregatedResultsByDateBetween);
     }
-
 
     private List<AggregatedResult> aggregate(List<Result> results) {
         Map<Stake, Map<Player, AggregatedResult>> aggregateMap = new HashMap<>();

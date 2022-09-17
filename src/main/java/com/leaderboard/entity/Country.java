@@ -8,6 +8,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "country")
 public class Country {
+
     @Id
     private String code;
     private String name;
@@ -55,4 +56,5 @@ public class Country {
                 ", name='" + name + '\'' +
                 '}';
     }
+
 }

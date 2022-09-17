@@ -4,10 +4,12 @@ public class ProviderResponse {
 
     private String code;
     private String name;
+    private String currency;
 
-    public ProviderResponse(String code, String name) {
+    public ProviderResponse(String code, String name, String currency) {
         this.code = code;
         this.name = name;
+        this.currency = currency;
     }
 
     public String getCode() {
@@ -26,11 +28,21 @@ public class ProviderResponse {
         this.name = name;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     @Override
     public String toString() {
         return "ProviderResponse{" +
                 "code='" + code + '\'' +
                 ", name='" + name + '\'' +
+                ", currency='" + currency + '\'' +
                 '}';
     }
+
 }

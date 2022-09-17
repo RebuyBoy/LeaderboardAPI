@@ -26,6 +26,6 @@ public interface ResultService {
 
     List<GameType> getGameTypesDataByProvider(Provider provider);
 
-    List<Stake> getStakesByByProviderAndGameType(Provider provider, GameType gameType);
+    List<Stake> getStakesByProviderAndGameType(Provider provider, GameType gameType);
 
 }

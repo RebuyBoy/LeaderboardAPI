@@ -10,4 +10,5 @@ public interface ProviderService {
     List<ProviderResponse> getProviders();
 
     ProviderDataResponse getProviderData(String provider);
+
 }

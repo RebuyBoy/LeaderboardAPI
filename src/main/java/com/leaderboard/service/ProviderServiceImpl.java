@@ -30,35 +30,30 @@ public class ProviderServiceImpl implements ProviderService {
     public List<ProviderResponse> getProviders() {
         return resultService.getAllProviders()
                 .stream()
-                .map(allProvider -> new ProviderResponse(allProvider.name(), allProvider.getDescription()))
+                .map(provider -> new ProviderResponse(provider.name(), provider.getDescription(), provider.getCurrency()))
                 .toList();
     }
 
     @Override
     public ProviderDataResponse getProviderData(String providerString) {
-
         Provider provider = getProvider(providerString);
-
         LocalDate lastUpdate = resultService.getLastUpdateByProvider(provider);
         List<ProviderData> providersData = getProviderData(provider);
-
         return new ProviderDataResponse(lastUpdate, providersData);
     }
 
     private List<ProviderData> getProviderData(Provider provider) {
-
-        List<GameType> gameTypeData = resultService.getGameTypesDataByProvider(provider);
-
-        return gameTypeData.stream()
-                .map(gameTypeDatum -> new ProviderData(gameTypeDatum, getStakeResponses(provider, gameTypeDatum)))
+        return resultService.getGameTypesDataByProvider(provider)
+                .stream()
+                .map(gameTypeData -> new ProviderData(gameTypeData, getStakeResponses(provider, gameTypeData)))
                 .toList();
     }
 
     private List<StakeResponse> getStakeResponses(Provider provider, GameType gameTypeDatum) {
-        return resultService.getStakesByByProviderAndGameType(provider, gameTypeDatum)
+        return resultService.getStakesByProviderAndGameType(provider, gameTypeDatum)
                 .stream()
                 .sorted(Comparator.comparing(Stake::getStakeEquivalent).reversed())
-                .map(stake -> new StakeResponse(stake.getCurrency(), stake.getStakeEquivalent().toString()))
+                .map(stake -> new StakeResponse(stake.getStakeEquivalent().toString()))
                 .toList();
     }
 

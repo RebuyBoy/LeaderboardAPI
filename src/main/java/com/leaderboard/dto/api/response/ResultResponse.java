@@ -5,41 +5,22 @@ import com.leaderboard.dto.api.AggregatedResult;
 import java.util.List;
 
 public class ResultResponse {
-    private String provider;
-    private String currency;
 
+    private ProviderResponse provider;
     private List<AggregatedResult> aggregatedResults;
 
 
-    public ResultResponse(String provider, String currency, List<AggregatedResult> aggregatedResults) {
+    public ResultResponse(ProviderResponse provider, List<AggregatedResult> aggregatedResults) {
         this.provider = provider;
-        this.currency = currency;
         this.aggregatedResults = aggregatedResults;
     }
 
-    @Override
-    public String toString() {
-        return "ResultResponse{" +
-                "provider='" + provider + '\'' +
-                ", currency='" + currency + '\'' +
-                ", aggregatedResults=" + aggregatedResults +
-                '}';
-    }
-
-    public String getProvider() {
+    public ProviderResponse getProvider() {
         return provider;
     }
 
-    public void setProvider(String provider) {
+    public void setProvider(ProviderResponse provider) {
         this.provider = provider;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public List<AggregatedResult> getAggregatedResults() {
@@ -49,4 +30,5 @@ public class ResultResponse {
     public void setAggregatedResults(List<AggregatedResult> aggregatedResults) {
         this.aggregatedResults = aggregatedResults;
     }
+
 }
