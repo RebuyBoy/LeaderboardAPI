@@ -1,6 +1,5 @@
 package com.leaderboard.controllers;
 
-import com.leaderboard.dto.api.AggregatedResult;
 import com.leaderboard.dto.api.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
@@ -11,19 +10,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("v1/results")
 @Tag(name = "AggregateResultController")
+@CrossOrigin()
 public class AggregatedResultController implements BaseController {
 
     private final AggregateService aggregateService;
@@ -38,23 +37,21 @@ public class AggregatedResultController implements BaseController {
     @GetMapping("/stake")
     @Operation(summary = "get last year results by provider, gameType and stake if passed")
     public ResultResponse getAllByStake(@RequestParam(value = "provider") Provider provider,
-                                                   @RequestParam(value = "gameType") GameType gameType,
-                                                   @RequestParam(value = "stake", required = false) Stake stake) {
-        List<AggregatedResult> aggregatedResults = aggregateService.getAllByStake(provider, gameType, stake);
-        return new ResultResponse(provider.name(), stake.getCurrency(), aggregatedResults);
+                                        @RequestParam(value = "gameType") GameType gameType,
+                                        @RequestParam(value = "stake", required = false) Stake stake) {
+        return aggregateService.getAllByStake(provider, gameType, stake);
     }
 
     @GetMapping("/date")
     @Operation(summary = "get results by date from start to end if passed or current date if not, by stake or last year if stake not passed")
     @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
     public ResultResponse getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                                                  @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
-                                                  @RequestParam(value = "provider") Provider provider,
-                                                  @RequestParam(value = "gameType") GameType gameType,
-                                                  @RequestParam(value = "stake", required = false) Stake stake) {
+                                       @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
+                                       @RequestParam(value = "provider") Provider provider,
+                                       @RequestParam(value = "gameType") GameType gameType,
+                                       @RequestParam(value = "stake", required = false) Stake stake) {
 
-        List<AggregatedResult> aggregatedResults = aggregateService.getAllByDate(start, end, provider, gameType, stake);
-        return new ResultResponse(provider.name(), stake.getCurrency(), aggregatedResults);
+        return aggregateService.getAllByDate(start, end, provider, gameType, stake);
     }
 
     @GetMapping("/parse")
@@ -66,8 +63,7 @@ public class AggregatedResultController implements BaseController {
         if (Objects.isNull(end)) {
             end = LocalDate.now();
         }
-        //TODO provider
-        clientService.runDailyDataFlow(start.datesUntil(end).collect(Collectors.toList()));
+        clientService.runDailyDataFlow(start.datesUntil(end).toList());
     }
 
 }

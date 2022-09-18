@@ -6,6 +6,7 @@ import com.leaderboard.entity.Result;
 import com.leaderboard.entity.Stake;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,13 +17,20 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
 
     @Query("SELECT r FROM Result r " +
             "JOIN r.date d " +
-            "WHERE r.stake = ?5" +
-            "AND r.provider = ?3" +
-            "AND r.gameType = ?4" +
-            "AND d.date BETWEEN ?1 AND ?2")
-    List<Result> getResultsByDateBetween(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake);
+            "WHERE (:stake IS NULL OR r.stake = :stake)" +
+            "AND r.provider = :provider " +
+            "AND r.gameType = :gameType " +
+            "AND d.date BETWEEN :start AND :end")
+    List<Result> getResultsByDateBetween(@Param("start") LocalDate start,
+                                         @Param("end") LocalDate end,
+                                         @Param("provider") Provider provider,
+                                         @Param("gameType") GameType gameType,
+                                         @Param("stake") Stake stake);
 
-    List<Result> getResultsByProviderAndGameTypeAndStake(Provider provider, GameType gameType, Stake stake);
+    @Query("SELECT r FROM Result r WHERE r.provider = :provider AND r.gameType = :gameType and (:stake IS NULL or r.stake = :stake)")
+    List<Result> getResultsByProviderAndGameTypeAndStake(@Param("provider") Provider provider,
+                                                         @Param("gameType") GameType gameType,
+                                                         @Param("stake") Stake stake);
 
     @Query("SELECT DISTINCT r.provider FROM Result r")
     List<Provider> getDistinctByProvider();

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class DateServiceImpl implements DateService {
+
     private final DateRepository dateRepository;
 
     public DateServiceImpl(DateRepository dateRepository) {
@@ -34,4 +35,5 @@ public class DateServiceImpl implements DateService {
     public DateLB save(DateLB dateLB) {
         return dateRepository.save(dateLB);
     }
+
 }

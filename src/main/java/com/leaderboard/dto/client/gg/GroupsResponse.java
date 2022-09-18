@@ -1,6 +1,8 @@
 package com.leaderboard.dto.client.gg;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,8 +10,8 @@ public class GroupsResponse {
 
     private int groupId;
     private String name;
-    //Mojno podkluchit'  Jackson time module and change to LocalDate
-    private Timestamp startedAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private LocalDateTime startedAt;
     private String[] gameTypes;
     private String host;
     private List<SetsResponse> sets;
@@ -46,11 +48,11 @@ public class GroupsResponse {
         this.sets = sets;
     }
 
-    public Timestamp getStartedAt() {
+    public LocalDateTime getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(Timestamp startedAt) {
+    public void setStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;
     }
 

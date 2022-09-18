@@ -1,6 +1,7 @@
 package com.leaderboard.entity;
 
 public enum GameType {
+
     SHORT_DECK("SD"),
     OMAHA("OM"),
     SPIN_AND_GOLD("SG"),

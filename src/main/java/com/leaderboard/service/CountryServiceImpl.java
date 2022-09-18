@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CountryServiceImpl implements CountryService {
+
     private final CountryRepository countryRepository;
 
     public CountryServiceImpl(CountryRepository countryRepository) {
@@ -17,4 +18,5 @@ public class CountryServiceImpl implements CountryService {
     public Country getByCode(String code) {
         return countryRepository.getByCode(code);
     }
+
 }

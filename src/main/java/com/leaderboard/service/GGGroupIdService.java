@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Service
 public class GGGroupIdService implements GroupIdService {
+
     private final GroupIdRepository groupIdRepository;
 
     public GGGroupIdService(GroupIdRepository groupIdRepository) {
@@ -30,4 +31,5 @@ public class GGGroupIdService implements GroupIdService {
                 groupId.getPromotionGroupId(),
                 groupId.getGameType());
     }
+
 }

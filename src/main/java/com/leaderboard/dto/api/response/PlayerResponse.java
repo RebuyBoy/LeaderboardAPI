@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.leaderboard.entity.Country;
 
 public class PlayerResponse {
+
     private final String name;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private final Country country;
@@ -39,4 +40,5 @@ public class PlayerResponse {
             return new PlayerResponse(this);
         }
     }
+
 }

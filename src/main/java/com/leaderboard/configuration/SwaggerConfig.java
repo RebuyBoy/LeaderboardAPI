@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
@@ -14,6 +15,7 @@ public class SwaggerConfig {
                         .description("Leaderboard application")
                         .version("v0.0.1"));
     }
+
 }
 
 

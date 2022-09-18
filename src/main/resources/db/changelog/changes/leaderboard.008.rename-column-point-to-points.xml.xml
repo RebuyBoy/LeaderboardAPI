@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sergey_M" id="leaderboard.008.rename-column-point-to-points.xml.xml">
+
+        <renameColumn  catalogName="LeaderboardDB"
+                       schemaName="public"
+                       tableName="result"
+                       newColumnName="points"
+                       oldColumnName="point"/>
+
+    </changeSet>
+
+</databaseChangeLog>

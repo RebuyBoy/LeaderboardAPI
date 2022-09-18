@@ -13,7 +13,7 @@ public class GameTypeConverter implements AttributeConverter<GameType, String> {
 
     @Override
     public String convertToDatabaseColumn(GameType gameType) {
-        return gameType.getCode();
+        return gameType == null ? null : gameType.getCode();
     }
 
     @Override
@@ -21,14 +21,14 @@ public class GameTypeConverter implements AttributeConverter<GameType, String> {
         return Stream.of(GameType.values())
                 .filter(gameType -> gameType.getCode().equals(code))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Not found game type by code: " + code));
     }
 
     public GameType convertToEntityAttributeByName(String name) {
         return Stream.of(GameType.values())
                 .filter(gameType -> gameType.name().equals(name))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Not found game type by name: " + name));
     }
 
 }

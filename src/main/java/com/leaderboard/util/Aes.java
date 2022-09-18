@@ -9,7 +9,11 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.security.DigestException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -22,7 +26,7 @@ public class Aes {
     public static String decrypt(String secret, String data) {
 
         secret = convertStringToHex(secret);
-        String decryptedText = "";
+        String decryptedText;
 
         try {
             byte[] cipherData = Base64.getDecoder().decode(data);
@@ -85,4 +89,5 @@ public class Aes {
         long i = Long.parseLong(str);
         return Long.toHexString(i);
     }
+
 }

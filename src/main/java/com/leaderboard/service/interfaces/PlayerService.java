@@ -11,4 +11,5 @@ public interface PlayerService {
     void updatePlayer(Player newPlayer, Player currentPlayer);
 
     Player save(Player player);
+
 }

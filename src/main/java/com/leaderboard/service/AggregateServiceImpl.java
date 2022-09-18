@@ -2,6 +2,8 @@ package com.leaderboard.service;
 
 import com.leaderboard.dto.api.AggregatedResult;
 import com.leaderboard.dto.api.response.PlayerResponse;
+import com.leaderboard.dto.api.response.ProviderResponse;
+import com.leaderboard.dto.api.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
 import com.leaderboard.entity.Provider;
@@ -13,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,56 +31,52 @@ public class AggregateServiceImpl implements AggregateService {
     }
 
     @Override
-    public List<AggregatedResult> getAllByStake(Provider provider, GameType gameType, Stake stake) {
-        return aggregate(resultService.getAllByStake(provider, gameType, stake));
+    public ResultResponse getAllByStake(Provider provider, GameType gameType, Stake stake) {
+        List<AggregatedResult> aggregate = aggregate(resultService.getAllByStake(provider, gameType, stake));
+        return new ResultResponse(new ProviderResponse(provider.name(), provider.getDescription(), provider.getCurrency()), aggregate);
     }
 
     @Override
-    public List<AggregatedResult> getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake) {
+    public ResultResponse getAllByDate(LocalDate start, LocalDate end, Provider provider, GameType gameType, Stake stake) {
         if (end == null) {
             end = LocalDate.now((ZoneId.of(GMT_MINUS_8)));
         }
-        List<Result> resultsByDateBetween = resultService.getAllByDate(start, end, provider, gameType, stake);
-        return aggregate(resultsByDateBetween);
+        List<AggregatedResult> aggregatedResultsByDateBetween = aggregate(resultService.getAllByDate(start, end, provider, gameType, stake));
+        return new ResultResponse(new ProviderResponse(provider.name(), provider.getDescription(), provider.getCurrency()), aggregatedResultsByDateBetween);
     }
 
-
     private List<AggregatedResult> aggregate(List<Result> results) {
-        Map<Stake, Map<Player, AggregatedResult>> aggregateMap = new HashMap<>();
+        Map<Player, AggregatedResult> playerAggregatedResult = new HashMap<>();
 
-        results.forEach(result -> {
-            Stake stake = result.getStake();
-            if (aggregateMap.containsKey(stake)) {
-                Map<Player, AggregatedResult> playerAggregateMap = aggregateMap.get(stake);
-                Player player = result.getPlayer();
-                if (playerAggregateMap.containsKey(player)) {
-                    AggregatedResult aggregateResultDTO = playerAggregateMap.get(player);
-                    aggregateResultDTO.setTotalPoints(aggregateResultDTO.getTotalPoints().add(result.getPoint()));
-                    aggregateResultDTO.setTotalPrize(aggregateResultDTO.getTotalPrize().add(result.getPrize()));
-                } else {
-                    playerAggregateMap.put(
-                            player,
-                            new AggregatedResult.Builder()
-//                                    .stake(new StakeResponse(result.getStake().getStakeEquivalent()))
-                                    .player(new PlayerResponse.Builder()
-                                            .name(player.getName())
-                                            .country(player.getCountry())
-                                            .build())
-                                    .totalPoints(result.getPoint())
-                                    .totalPrize(result.getPrize())
-                                    .build());
-                }
-            } else {
-                aggregateMap.put(stake, new HashMap<>());
-            }
-        });
-
-        List<AggregatedResult> resultDTOS = new ArrayList<>();
-        for (Map<Player, AggregatedResult> value : aggregateMap.values()) {
-            resultDTOS.addAll(value.values());
+        for (Result result : results) {
+            Player player = result.getPlayer();
+            playerAggregatedResult.computeIfPresent(player, (p, aggregatedResult) -> summarizeResults(aggregatedResult, result));
+            playerAggregatedResult.putIfAbsent(player, createAggregatedResult(player, result));
         }
-        resultDTOS.sort(Collections.reverseOrder());
-        return resultDTOS;
+        return playerAggregatedResult.values().stream().sorted().toList();
+    }
+
+    private AggregatedResult summarizeResults(AggregatedResult aggregatedResult, Result result) {
+        return new AggregatedResult.Builder()
+                .player(aggregatedResult.getPlayer())
+                .totalPoints(aggregatedResult.getTotalPoints().add(result.getPoints()))
+                .totalPrize(aggregatedResult.getTotalPrize().add(result.getPrize()))
+                .build();
+    }
+
+    private AggregatedResult createAggregatedResult(Player player, Result result) {
+        return new AggregatedResult.Builder()
+                .player(toPlayerResponse(player))
+                .totalPoints(result.getPoints())
+                .totalPrize(result.getPrize())
+                .build();
+    }
+
+    private PlayerResponse toPlayerResponse(Player player) {
+        return new PlayerResponse.Builder()
+                .name(player.getName())
+                .country(player.getCountry())
+                .build();
     }
 
 }

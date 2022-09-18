@@ -20,7 +20,7 @@ public class Result {
     private int id;
     private int rank;
     private BigDecimal prize;
-    private BigDecimal point;
+    private BigDecimal points;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id")
     private Player player;
@@ -38,7 +38,7 @@ public class Result {
         this.id = builder.id;
         this.rank = builder.rank;
         this.prize = builder.prize;
-        this.point = builder.point;
+        this.points = builder.point;
         this.player = builder.player;
         this.stake = builder.stake;
         this.date = builder.date;
@@ -70,12 +70,12 @@ public class Result {
         this.prize = prize;
     }
 
-    public BigDecimal getPoint() {
-        return point;
+    public BigDecimal getPoints() {
+        return points;
     }
 
-    public void setPoint(BigDecimal point) {
-        this.point = point;
+    public void setPoints(BigDecimal point) {
+        this.points = point;
     }
 
     public Player getPlayer() {
@@ -125,7 +125,7 @@ public class Result {
         Result that = (Result) o;
         return rank == that.rank
                 && Objects.equals(prize, that.prize)
-                && Objects.equals(point, that.point)
+                && Objects.equals(points, that.points)
                 && player.equals(that.player)
                 && stake.equals(that.stake)
                 && date.equals(that.date);
@@ -133,7 +133,7 @@ public class Result {
 
     @Override
     public int hashCode() {
-        return Objects.hash(rank, prize, point, player, stake, date);
+        return Objects.hash(rank, prize, points, player, stake, date);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class Result {
                 "id=" + id +
                 ", rank=" + rank +
                 ", prize=" + prize +
-                ", point=" + point +
+                ", point=" + points +
                 ", player=" + player +
                 ", stake=" + stake +
                 ", date=" + date +
@@ -207,7 +207,6 @@ public class Result {
         }
 
         public Result build() {
-            //TODO validation??
             return new Result(this);
         }
 

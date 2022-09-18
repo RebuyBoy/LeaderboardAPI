@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "leaderboard_date")
 public class DateLB {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "date_generator")
     @SequenceGenerator(name = "date_generator", sequenceName = "date_sq", allocationSize = 1)
@@ -39,4 +40,5 @@ public class DateLB {
                 ", date=" + date +
                 '}';
     }
+
 }

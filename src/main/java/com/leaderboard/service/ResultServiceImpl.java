@@ -103,7 +103,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public List<Stake> getStakesByByProviderAndGameType(Provider provider, GameType gameType) {
+    public List<Stake> getStakesByProviderAndGameType(Provider provider, GameType gameType) {
         return resultRepository.getStakeDistinctByProviderAndGameType(provider, gameType);
     }
 

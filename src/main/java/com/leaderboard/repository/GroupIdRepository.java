@@ -10,5 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface GroupIdRepository extends JpaRepository<GroupId,Integer> {
+
     Optional<GroupId> getByDateAndPromotionGroupIdAndGameType(LocalDate date, String groupId, GameType gameType);
+
 }

@@ -13,7 +13,7 @@ public class ProviderConverter implements AttributeConverter<Provider, String> {
 
     @Override
     public String convertToDatabaseColumn(Provider provider) {
-        return provider.getCode();
+        return provider == null ? null : provider.getCode();
     }
 
     @Override

@@ -11,4 +11,5 @@
     <include file="changes/leaderboard.005.groupId-add-game-type.xml" relativeToChangelogFile="true"/>
     <include file="changes/leaderboard.006.add-provider-column.xml" relativeToChangelogFile="true"/>
     <include file="changes/leaderboard.007.add-column-stake-instead-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/leaderboard.008.rename-column-point-to-points.xml.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

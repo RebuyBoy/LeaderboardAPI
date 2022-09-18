@@ -14,7 +14,7 @@ public class StakeConverter implements AttributeConverter<Stake, String> {
 
     @Override
     public String convertToDatabaseColumn(Stake stake) {
-        return stake.name();
+        return stake == null ? null : stake.name();
     }
 
     @Override
