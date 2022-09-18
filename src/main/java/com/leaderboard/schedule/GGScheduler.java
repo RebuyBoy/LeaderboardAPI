@@ -1,6 +1,8 @@
 package com.leaderboard.schedule;
 
 import com.leaderboard.service.interfaces.ClientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import static com.leaderboard.constants.Constants.GMT_MINUS_8;
 @Service
 public class GGScheduler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GGScheduler.class);
     private final ClientService clientService;
 
     public GGScheduler(ClientService clientService) {
@@ -18,6 +21,7 @@ public class GGScheduler {
 
     @Scheduled(cron = EVERY_DAY_PLUS_3_MINUTES_AFTER_MIDNIGHT_CRON, zone = GMT_MINUS_8)
     public void dailyPromotionData() {
+        LOG.info("scheduler starts collecting data");
         clientService.runDailyDataFlow();
     }
 
