@@ -36,20 +36,20 @@ public class AggregatedResultController implements BaseController {
 
     @GetMapping("/stake")
     @Operation(summary = "get last year results by provider, gameType and stake if passed")
-    public ResultResponse getAllByStake(@RequestParam(value = "provider") Provider provider,
-                                        @RequestParam(value = "gameType") GameType gameType,
-                                        @RequestParam(value = "stake", required = false) Stake stake) {
+    public ResultResponse getAllByStake(@RequestParam Provider provider,
+                                        @RequestParam GameType gameType,
+                                        @RequestParam(required = false) Stake stake) {
         return aggregateService.getAllByStake(provider, gameType, stake);
     }
 
     @GetMapping("/date")
     @Operation(summary = "get results by date from start to end if passed or current date if not, by stake or last year if stake not passed")
     @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
-    public ResultResponse getAllByDate(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                                       @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
-                                       @RequestParam(value = "provider") Provider provider,
-                                       @RequestParam(value = "gameType") GameType gameType,
-                                       @RequestParam(value = "stake", required = false) Stake stake) {
+    public ResultResponse getAllByDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
+                                       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
+                                       @RequestParam Provider provider,
+                                       @RequestParam GameType gameType,
+                                       @RequestParam(required = false) Stake stake) {
 
         return aggregateService.getAllByDate(start, end, provider, gameType, stake);
     }
@@ -57,13 +57,14 @@ public class AggregatedResultController implements BaseController {
     @GetMapping("/parse")
     @Operation(summary = "parse results by date from start to end if passed or current date if not")
     @Parameter(example = "start(yyyy-MM-dd): 2022-09-05, end : 2022-09-05")
-    public void parseData(@RequestParam(value = "start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                          @RequestParam(value = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
-                          @RequestParam(value = "provider") Provider provider) {
+    public void parseData(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
+                          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
+                          @RequestParam Provider provider,
+                          @RequestParam GameType gameType) {
         if (Objects.isNull(end)) {
             end = LocalDate.now();
         }
-        clientService.runDailyDataFlow(start.datesUntil(end).toList());
+        clientService.runDailyDataFlow(start.datesUntil(end).toList(),gameType);
     }
 
 }
