@@ -7,18 +7,14 @@ import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
 import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Result;
+import com.leaderboard.entity.Stake;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 @Component
 public class ResultResponseConverter {
-
-    private final StakeConverter stakeConverter;
-
-    public ResultResponseConverter(StakeConverter stakeConverter) {
-        this.stakeConverter = stakeConverter;
-    }
 
     public Result convert(GGResultResponse resultDTO,
                           LocalDate date,
@@ -31,7 +27,7 @@ public class ResultResponseConverter {
                 .rank(resultDTO.getRank())
                 .player(getPlayer(resultDTO))
                 .date(new DateLB(date))
-                .stake(stakeConverter.convertToEntityAttributeByStakeEquivalent(stakeStr))
+                .stake(convertToEntityAttributeByStakeDescription(stakeStr))
                 .gameType(gameType)
                 .provider(provider)
                 .build();
@@ -42,6 +38,13 @@ public class ResultResponseConverter {
                 .name(resultDTO.getName())
                 .country(new Country(resultDTO.getCountryCode()))
                 .build();
+    }
+
+    public Stake convertToEntityAttributeByStakeDescription(String stakeDescription) {
+        return Stream.of(Stake.values())
+                .filter(stake -> stake.getDescription().equals(stakeDescription))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Stake not found by stake stakeDescription: " + stakeDescription));
     }
 
 }

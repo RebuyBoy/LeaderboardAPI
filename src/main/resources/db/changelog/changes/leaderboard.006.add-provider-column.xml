@@ -6,7 +6,7 @@
 
     <changeSet id="leaderboard.006.add-provider-column.xml" author="Sergey M">
         <addColumn tableName="result">
-            <column name="provider" type="Varchar(5)">
+            <column name="provider" type="Varchar(20)">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

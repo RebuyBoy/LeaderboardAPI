@@ -26,9 +26,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.leaderboard.constants.Constants.GAME_TYPES_PART_OF_URL;
+import static com.leaderboard.constants.Constants.GAME_TYPES_SUITABLE_STAKES;
 import static com.leaderboard.constants.Constants.GMT_MINUS_8;
-import static com.leaderboard.constants.Constants.STAKES_TO_PART_OF_URL;
-import static com.leaderboard.constants.Constants.SUITABLE_STAKES;
 
 @Service
 public class GGClientServiceImpl implements ClientService {
@@ -75,7 +75,7 @@ public class GGClientServiceImpl implements ClientService {
             SetsResponse sets = findSetByDate(groupsResponse, date);
             for (SubsetsResponse subset : sets.getSubsets()) {
                 String stake = subset.getStake();
-                if (SUITABLE_STAKES.contains(stake)) {
+                if (GAME_TYPES_SUITABLE_STAKES.get(gameType).contains(stake)) {
                     handleData(date, subset, stake, gameType);
                 }
             }
@@ -90,6 +90,7 @@ public class GGClientServiceImpl implements ClientService {
             runDailyDataFlow(date, gameType);
         }
     }
+
     //TODO return GroupResponse and @Cacheable   check by gameType??
     private void updateMonthlyData(GameType gameType) {
         String groupUrl = generateMainPromoUrl(gameType);
@@ -106,7 +107,7 @@ public class GGClientServiceImpl implements ClientService {
     }
 
     private void handleData(LocalDate date, SubsetsResponse subset, String stake, GameType gameType) {
-        List<GGResultResponse> resultDTOS = getGGResultDTOS(subset.getPromotionId(), stake);
+        List<GGResultResponse> resultDTOS = getGGResultDTOS(gameType,subset.getPromotionId(), stake);
         saveResults(date, stake, resultDTOS, gameType);
     }
 
@@ -120,8 +121,8 @@ public class GGClientServiceImpl implements ClientService {
         return groupsResponse.getStartedAt().getMonthValue() != (date.getMonthValue());
     }
 
-    private List<GGResultResponse> getGGResultDTOS(int promotionId, String stake) {
-        String url = generatePromotionUrl(formatStake(stake), promotionId);
+    private List<GGResultResponse> getGGResultDTOS(GameType gameType, int promotionId, String stake) {
+        String url = generatePromotionUrl(getLimitValueByStake(gameType,stake), promotionId);
         return ggRequestService.promotionIdRequest(url);
     }
 
@@ -148,10 +149,10 @@ public class GGClientServiceImpl implements ClientService {
         return GGN_BASE_PROMO_FORMAT.formatted(gameType.getDescription());
     }
 
-    private String formatStake(String stake) {
-        //TODO check all gameTypes
-        if (STAKES_TO_PART_OF_URL.containsKey(stake)) {
-            return STAKES_TO_PART_OF_URL.get(stake);
+    private String getLimitValueByStake(GameType gameType, String stake) {
+        Map<String, String> stakesToPartUrl = GAME_TYPES_PART_OF_URL.get(gameType);
+        if (stakesToPartUrl.containsKey(stake)) {
+            return stakesToPartUrl.get(stake);
         }
         throw new IllegalArgumentException("wrong stake: " + stake);
     }

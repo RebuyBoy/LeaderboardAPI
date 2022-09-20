@@ -6,7 +6,7 @@
 
     <changeSet id="leaderboard.003.add-game-type" author="Sergey M">
         <addColumn tableName="result">
-            <column name="game_type" type="Varchar(5)">
+            <column name="game_type" type="Varchar(20)">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

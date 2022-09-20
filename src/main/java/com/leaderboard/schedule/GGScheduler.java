@@ -6,12 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import static com.leaderboard.constants.Constants.EVERY_DAY_PLUS_3_MINUTES_AFTER_MIDNIGHT_CRON;
 import static com.leaderboard.constants.Constants.GMT_MINUS_8;
 
 @Service
 public class GGScheduler {
-
+    public static final String EVERY_DAY_PLUS_3_MINUTES_AFTER_MIDNIGHT_CRON = "0 3 0 * * *";
     private static final Logger LOG = LoggerFactory.getLogger(GGScheduler.class);
     private final ClientService clientService;
 
@@ -24,6 +23,8 @@ public class GGScheduler {
         LOG.info("scheduler starts collecting data");
         clientService.runDailyDataFlow();
     }
+    //TODO random start time
+    // delay between requests?
 
 }
 
