@@ -3,41 +3,33 @@ package com.leaderboard.converters;
 import com.leaderboard.dto.client.gg.GGResultResponse;
 import com.leaderboard.entity.Country;
 import com.leaderboard.entity.DateLB;
+import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Player;
+import com.leaderboard.entity.Provider;
 import com.leaderboard.entity.Result;
+import com.leaderboard.entity.Stake;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 @Component
 public class ResultResponseConverter {
 
-    private final GameTypeConverter gameTypeConverter;
-    private final ProviderConverter providerConverter;
-    private final StakeConverter stakeConverter;
-
-    public ResultResponseConverter(GameTypeConverter gameTypeConverter,
-                                   ProviderConverter providerConverter,
-                                   StakeConverter stakeConverter) {
-        this.gameTypeConverter = gameTypeConverter;
-        this.providerConverter = providerConverter;
-        this.stakeConverter = stakeConverter;
-    }
-
     public Result convert(GGResultResponse resultDTO,
                           LocalDate date,
                           String stakeStr,
-                          String gameTypeName,
-                          String provider) {
+                          GameType gameType,
+                          Provider provider) {
         return new Result.Builder()
                 .point(resultDTO.getPoints())
                 .prize(resultDTO.getPrize())
                 .rank(resultDTO.getRank())
                 .player(getPlayer(resultDTO))
                 .date(new DateLB(date))
-                .stake(stakeConverter.convertToEntityAttributeByStakeEquivalent(stakeStr))
-                .gameType(gameTypeConverter.convertToEntityAttributeByName(gameTypeName))
-                .provider(providerConverter.convertToEntityAttributeByName(provider))
+                .stake(convertToEntityAttributeByStakeDescription(stakeStr))
+                .gameType(gameType)
+                .provider(provider)
                 .build();
     }
 
@@ -46,6 +38,13 @@ public class ResultResponseConverter {
                 .name(resultDTO.getName())
                 .country(new Country(resultDTO.getCountryCode()))
                 .build();
+    }
+
+    public Stake convertToEntityAttributeByStakeDescription(String stakeDescription) {
+        return Stream.of(Stake.values())
+                .filter(stake -> stake.getDescription().equals(stakeDescription))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Stake not found by stake stakeDescription: " + stakeDescription));
     }
 
 }

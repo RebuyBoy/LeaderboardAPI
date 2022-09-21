@@ -3,9 +3,9 @@ package com.leaderboard.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leaderboard.dto.client.Response;
 import com.leaderboard.dto.client.gg.GGResultResponse;
 import com.leaderboard.dto.client.gg.GroupsResponse;
-import com.leaderboard.dto.client.Response;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.GGRequestService;
 import com.leaderboard.util.Aes;
@@ -17,10 +17,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Objects;
 
-import static com.leaderboard.constants.Constants.SECRET_KEY;
-
 @Service
 public class GGRequestServiceImpl implements GGRequestService {
+    public static final String SECRET_KEY = "milliseconds";
 
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;

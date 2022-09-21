@@ -1,6 +1,8 @@
 package com.leaderboard.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,7 @@ public class GroupId {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_id_generator")
     private int id;
     private LocalDate date;
+    @Enumerated(EnumType.STRING)
     private GameType gameType;
     private String promotionGroupId;
 

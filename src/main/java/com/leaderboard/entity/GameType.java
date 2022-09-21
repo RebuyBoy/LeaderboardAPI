@@ -1,20 +1,19 @@
 package com.leaderboard.entity;
 
 public enum GameType {
+    SHORT_DECK("short-deck"),
+    OMAHA("omaha");
+//    SPIN_GOLD("SG", "spin-gold"),
+//    HOLDEM("HM","holdem");
 
-    SHORT_DECK("SD"),
-    OMAHA("OM"),
-    SPIN_AND_GOLD("SG"),
-    HOLDEM("HM");
+    private final String description;
 
-    private final String code;
-
-    GameType(String code) {
-        this.code = code;
+    GameType(String description) {
+        this.description = description;
     }
 
-    public String getCode() {
-        return code;
+    public String getDescription() {
+        return description;
     }
 
 }

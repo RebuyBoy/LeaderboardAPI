@@ -1,6 +1,8 @@
 package com.leaderboard.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,11 +26,14 @@ public class Result {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id")
     private Player player;
+    @Enumerated(EnumType.STRING)
     private Stake stake;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id")
     private DateLB date;
+    @Enumerated(EnumType.STRING)
     private GameType gameType;
+    @Enumerated(EnumType.STRING)
     private Provider provider;
 
     public Result() {
