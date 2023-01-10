@@ -1,12 +1,14 @@
 package com.leaderboard.service;
 
 import com.leaderboard.converters.ResultResponseConverter;
+import com.leaderboard.dto.api.ResultTelegram;
 import com.leaderboard.dto.client.gg.GGResultResponse;
 import com.leaderboard.dto.client.gg.GroupsResponse;
 import com.leaderboard.dto.client.gg.SetsResponse;
 import com.leaderboard.dto.client.gg.SubsetsResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
+import com.leaderboard.entity.Stake;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.ClientService;
 import com.leaderboard.service.interfaces.GGMonthlyDataService;
@@ -31,18 +33,18 @@ public class GGClientServiceImpl implements ClientService {
 
     private static final String PROMO_URL_FORMAT = "https://pml.good-game-network.com/lapi/leaderboard/%s/?status=PENDING&status=OPTED_IN&status=COMPLETED&status=EXPIRED&limit=%s&hasSummary=true&hasSummaryPaidPrizes=true&hasSummaryPrizeItem=true";
     private static final Logger LOG = LoggerFactory.getLogger(GGClientServiceImpl.class);
-    private final GGMonthlyDataService GGMonthlyDataService;
+    private final GGMonthlyDataService monthlyDataService;
     private final GGRequestService ggRequestService;
     private final ResultResponseConverter resultConverter;
     private final ResultService resultService;
 
 
-    public GGClientServiceImpl(GGMonthlyDataService GGMonthlyDataService,
+    public GGClientServiceImpl(GGMonthlyDataService monthlyDataService,
                                GGRequestService ggRequestService,
                                ResultResponseConverter converter,
                                ResultService resultService) {
 
-        this.GGMonthlyDataService = GGMonthlyDataService;
+        this.monthlyDataService = monthlyDataService;
         this.ggRequestService = ggRequestService;
         this.resultConverter = converter;
         this.resultService = resultService;
@@ -51,7 +53,7 @@ public class GGClientServiceImpl implements ClientService {
     @Override
     public void runDailyDataFlow() {
         List.of(GameType.values())
-                .forEach(gameType -> runDailyDataFlow(getTargetDay(), gameType));
+                .forEach(gameType -> runDailyDataFlow(daysBeforeNow(1), gameType));
     }
 
     @Override
@@ -64,11 +66,14 @@ public class GGClientServiceImpl implements ClientService {
     @Override
     public void runDailyDataFlow(LocalDate date, GameType gameType) {
         GroupsResponse groupsResponse = verifyGroupResponse(date, gameType);
+        //TODO check date to be past one day from current
         try {
             LOG.info("Parsing data is started by date: {} and gameType: {}", date, gameType);
             SetsResponse sets = findSetByDate(groupsResponse, date);
             for (SubsetsResponse subset : sets.getSubsets()) {
                 String stake = subset.getStake();
+                stake = stake.substring(0, stake.indexOf('|'));
+                //TODO fix changed format of stake $10 -> $10.00|1억
                 if (GAME_TYPES_SUITABLE_STAKES.get(gameType).contains(stake)) {
                     handleData(date, subset, stake, gameType);
                 }
@@ -79,11 +84,33 @@ public class GGClientServiceImpl implements ClientService {
         }
     }
 
+    public List<ResultTelegram> runDailyDataFlow(Stake stake, GameType gameType) {
+        LOG.info("Parsing data by stake {} is started", stake);
+        LocalDate currentDate = daysBeforeNow(0);
+        GroupsResponse groupsResponse = verifyGroupResponse(currentDate, gameType);
+        SetsResponse sets = findSetByDate(groupsResponse, currentDate);
+        int promotionId = -1;
+        for (SubsetsResponse subset : sets.getSubsets()) {
+            String subsetStake = subset.getStake();
+            if (subsetStake.startsWith(stake.getDescription())) {
+                promotionId = subset.getPromotionId();
+                break;
+            }
+        }
+        return getGGResultDTOS(gameType, promotionId, stake.getDescription())
+                .stream()
+                .map(result -> new ResultTelegram(result.getName(), result.getPoints()))
+                .toList();
+
+    }
+
+
     private GroupsResponse verifyGroupResponse(LocalDate date, GameType gameType) {
-        GroupsResponse groupsResponse = GGMonthlyDataService.parseMonthlyData(gameType);
-        if (isOutdatedMonth(groupsResponse, date)) {
-            GGMonthlyDataService.deleteGroupResponseCache();
-            groupsResponse = GGMonthlyDataService.parseMonthlyData(gameType);
+        GroupsResponse groupsResponse = monthlyDataService.parseMonthlyData(gameType);
+        //TODO fix cash is null
+        if (groupsResponse == null || isOutdatedMonth(groupsResponse, date)) {
+            monthlyDataService.deleteGroupResponseCache();
+            groupsResponse = monthlyDataService.parseMonthlyData(gameType);
         }
         return groupsResponse;
     }
@@ -128,10 +155,10 @@ public class GGClientServiceImpl implements ClientService {
         throw new IllegalArgumentException("wrong stake: " + stake);
     }
 
-    private LocalDate getTargetDay() {
+    private LocalDate daysBeforeNow(int minusDays) {
         return ZonedDateTime
                 .now(ZoneId.of(GMT_MINUS_8))
-                .minusDays(1)
+                .minusDays(minusDays)
                 .toLocalDate();
     }
 

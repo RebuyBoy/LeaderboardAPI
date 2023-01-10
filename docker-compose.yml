@@ -1,4 +1,18 @@
 services:
+
+  leaderboardDBMY:
+    image: postgres:latest
+    container_name: leaderboardDBMY
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=LeaderboardDB
+    ports:
+      - 5432:5432
+
+
+
   leaderboardDB:
     image: postgres:latest
     container_name: leaderboardDB
@@ -7,5 +21,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=LeaderboardDB
+  leaderboardAPI:
+    image: rebuyboy/leaderboardapi:latest
+    restart: always
     ports:
-      - "5444:5432"
+      - 8082:8081
+    depends_on:
+      - leaderboardDB
+    links:
+      - leaderboardDB

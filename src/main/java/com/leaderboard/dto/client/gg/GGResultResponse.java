@@ -16,18 +16,7 @@ public class GGResultResponse {
     private BigDecimal prize;
     private int rank;
     private int stake;
-
-    @JsonProperty("prize")
-    public void setPrize(Map<String, String> prize) {
-        this.prize = prize == null
-                ? new BigDecimal(0)
-                : BigDecimal.valueOf(Double.parseDouble(prize.get("value")));
-    }
-
-    @JsonProperty("point")
-    public void setPoints(String points) {
-        this.points = BigDecimal.valueOf(Double.parseDouble(points));
-    }
+    private boolean isCorrect;
 
     public String getName() {
         return name;
@@ -49,12 +38,31 @@ public class GGResultResponse {
         return points;
     }
 
+    @JsonProperty("point")
+    public void setPoints(String points) {
+        this.points = BigDecimal.valueOf(Double.parseDouble(points));
+    }
+
     public void setPoints(BigDecimal points) {
         this.points = points;
     }
 
     public BigDecimal getPrize() {
         return prize;
+    }
+
+    @JsonProperty("prizePaid")
+    public void setPrize(Map<String, Object> prizePaid) {
+        if (prizePaid == null) {
+            this.prize = new BigDecimal(0);
+        } else {
+            Object value = prizePaid.get("value");
+            if (value instanceof Double doubleValue) {
+                this.prize = BigDecimal.valueOf(doubleValue);
+            } else if (value instanceof Integer integerValue) {
+                this.prize = BigDecimal.valueOf(integerValue);
+            }
+        }
     }
 
     public void setPrize(BigDecimal prize) {
@@ -77,14 +85,24 @@ public class GGResultResponse {
         this.stake = stake;
     }
 
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
     @Override
     public String toString() {
-        return "GGPlayerResultDTO{" +
+        return "GGResultResponse{" +
                 "name='" + name + '\'' +
                 ", countryCode='" + countryCode + '\'' +
                 ", points=" + points +
                 ", prize=" + prize +
                 ", rank=" + rank +
+                ", stake=" + stake +
+                ", isCorrect=" + isCorrect +
                 '}';
     }
 

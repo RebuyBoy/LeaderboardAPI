@@ -24,6 +24,7 @@ public class GGScheduler {
         clientService.runDailyDataFlow();
     }
     //TODO random start time
+    // check current cron
     // delay between requests?
 
 }

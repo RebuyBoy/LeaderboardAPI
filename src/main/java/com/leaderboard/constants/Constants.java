@@ -9,7 +9,6 @@ public class Constants {
 
     //TODO default time zone?
     public static final String GMT_MINUS_8 = "GMT-8";
-
     private static final Set<String> SUITABLE_STAKES_SHORT_DECK = Set.of(
             "$10.00",
             "$5.00",
@@ -32,8 +31,9 @@ public class Constants {
     );
 
     public static final Map<GameType, Set<String>> GAME_TYPES_SUITABLE_STAKES = Map.of(
-            GameType.SHORT_DECK, SUITABLE_STAKES_SHORT_DECK,
-            GameType.OMAHA, SUITABLE_STAKES_OMAHA);
+            GameType.SHORT_DECK, SUITABLE_STAKES_SHORT_DECK
+            //,GameType.OMAHA, SUITABLE_STAKES_OMAHA
+    );
 
     private static final Map<String, String> STAKES_TO_PART_OF_URL_SHORT_DECK = Map.of(
             "$10.00", "10",
@@ -59,8 +59,9 @@ public class Constants {
     );
 
     public static final Map<GameType, Map<String, String>> GAME_TYPES_PART_OF_URL = Map.of(
-            GameType.SHORT_DECK, STAKES_TO_PART_OF_URL_SHORT_DECK,
-            GameType.OMAHA, STAKES_TO_PART_OF_URL_OMAHA);
+            GameType.SHORT_DECK, STAKES_TO_PART_OF_URL_SHORT_DECK
+//            ,GameType.OMAHA, STAKES_TO_PART_OF_URL_OMAHA
+    );
 
     private Constants() {
         throw new IllegalStateException("Utility class");

@@ -21,6 +21,7 @@ public class GGClientGGMonthlyDataServiceImpl implements GGMonthlyDataService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GGClientGGMonthlyDataServiceImpl.class);
     private static final String GROUP_ID_REGEX = "groupId=(\\d+)";
+    //TODO change link to GLOBAL
     private static final String GGN_BASE_PROMO_FORMAT = "https://play.pokerok900.com/promotions/promo-%s";
     private static final String GGN_GROUP_ID_REQUEST_FORMAT = "https://pml.good-game-network.com/lapi/leaderboard/groups/%s";
 

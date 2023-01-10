@@ -9,6 +9,7 @@ import com.leaderboard.dto.client.gg.GroupsResponse;
 import com.leaderboard.exceptions.NoResultException;
 import com.leaderboard.service.interfaces.GGRequestService;
 import com.leaderboard.util.Aes;
+import com.leaderboard.util.FileHelper;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

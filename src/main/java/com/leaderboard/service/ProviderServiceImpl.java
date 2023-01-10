@@ -53,7 +53,7 @@ public class ProviderServiceImpl implements ProviderService {
         return resultService.getStakesByProviderAndGameType(provider, gameTypeDatum)
                 .stream()
                 .sorted(Comparator.comparing(Stake::getStakeEquivalent).reversed())
-                .map(stake -> new StakeResponse(stake.getStakeEquivalent().toString()))
+                .map(stake -> new StakeResponse(stake.getStakeEquivalent().toString(),stake.getName(),stake.getDescription()))
                 .toList();
     }
 

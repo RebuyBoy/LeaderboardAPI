@@ -1,5 +1,6 @@
 package com.leaderboard.controllers;
 
+import com.leaderboard.dto.api.ResultTelegram;
 import com.leaderboard.dto.api.response.ResultResponse;
 import com.leaderboard.entity.GameType;
 import com.leaderboard.entity.Provider;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -65,6 +67,11 @@ public class AggregatedResultController implements BaseController {
             end = LocalDate.now();
         }
         clientService.runDailyDataFlow(start.datesUntil(end).toList(),gameType);
+    }
+    @GetMapping("/parseStake")
+    @Operation(summary = "parse current results by stake")
+    public List<ResultTelegram> parseCurrentDataByStake(@RequestParam Stake stake) {
+        return clientService.runDailyDataFlow(stake,GameType.SHORT_DECK);
     }
 
 }
